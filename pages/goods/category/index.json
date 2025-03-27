@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "下单",
+  "usingComponents": {
+    "goods-category": "./components/goods-category/index",
+    "t-toast": "tdesign-miniprogram/toast/toast"
+  }
+}
