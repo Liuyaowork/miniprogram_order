@@ -1,6 +1,6 @@
 Component({
   options: {
-    addGlobalClass: true,
+    addGlobalClass: true, // 允许组件使用全局样式
   },
 
   properties: {
@@ -8,6 +8,7 @@ Component({
       type: String,
       value: '',
       observer(id) {
+        // 当 id 属性变化时，生成独立的 ID 并初始化交叉观察器
         this.genIndependentID(id);
         if (this.properties.thresholds?.length) {
           this.createIntersectionObserverHandle();
@@ -17,6 +18,7 @@ Component({
     data: {
       type: Object,
       observer(data) {
+        // 当 data 属性变化时，更新商品数据并校验划线价格的有效性
         if (!data) {
           return;
         }
@@ -29,13 +31,14 @@ Component({
     },
     currency: {
       type: String,
-      value: '¥',
+      value: '¥', // 默认货币符号
     },
 
     thresholds: {
       type: Array,
       value: [],
       observer(thresholds) {
+        // 当 thresholds 属性变化时，创建或清除交叉观察器
         if (thresholds && thresholds.length) {
           this.createIntersectionObserverHandle();
         } else {
@@ -46,16 +49,18 @@ Component({
   },
 
   data: {
-    independentID: '',
-    goods: { id: '' },
-    isValidityLinePrice: false,
+    independentID: '', // 独立的组件 ID
+    goods: { id: '' }, // 商品数据
+    isValidityLinePrice: false, // 划线价格是否有效
   },
 
   lifetimes: {
     ready() {
+      // 组件初始化时调用
       this.init();
     },
     detached() {
+      // 组件销毁时调用
       this.clear();
     },
   },
@@ -63,14 +68,17 @@ Component({
   pageLifeTimes: {},
 
   methods: {
+    // 点击商品卡片触发的事件
     clickHandle() {
       this.triggerEvent('click', { goods: this.data.goods });
     },
 
+    // 点击商品缩略图触发的事件
     clickThumbHandle() {
       this.triggerEvent('thumb', { goods: this.data.goods });
     },
 
+    // 点击添加购物车按钮触发的事件
     addCartHandle(e) {
       const { id } = e.currentTarget;
       const { id: cardID } = e.currentTarget.dataset;
@@ -82,6 +90,7 @@ Component({
       });
     },
 
+    // 生成独立的组件 ID
     genIndependentID(id) {
       let independentID;
       if (id) {
@@ -92,6 +101,7 @@ Component({
       this.setData({ independentID });
     },
 
+    // 初始化组件
     init() {
       const { thresholds, id } = this.properties;
       this.genIndependentID(id);
@@ -100,12 +110,14 @@ Component({
       }
     },
 
+    // 清理组件资源
     clear() {
       this.clearIntersectionObserverHandle();
     },
 
-    intersectionObserverContext: null,
+    intersectionObserverContext: null, // 交叉观察器上下文
 
+    // 创建交叉观察器
     createIntersectionObserverHandle() {
       if (this.intersectionObserverContext || !this.data.independentID) {
         return;
@@ -122,6 +134,7 @@ Component({
       );
     },
 
+    // 交叉观察器回调
     intersectionObserverCB() {
       this.triggerEvent('ob', {
         goods: this.data.goods,
@@ -129,6 +142,7 @@ Component({
       });
     },
 
+    // 清除交叉观察器
     clearIntersectionObserverHandle() {
       if (this.intersectionObserverContext) {
         try {

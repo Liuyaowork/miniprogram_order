@@ -1,3 +1,6 @@
+/**
+ * 订单状态枚举。
+ */
 export const OrderStatus = {
   PENDING_PAYMENT: 5, // 待支付
   PENDING_DELIVERY: 10, // 待发货
@@ -9,6 +12,9 @@ export const OrderStatus = {
   CANCELED_REJECTION: 80, // 已取消，拒收
 };
 
+/**
+ * 售后状态枚举。
+ */
 // 售后状态 10:待审核,20:已审核,30:已收货,40:收货异常,50:已完成,60:已关闭;
 export const AfterServiceStatus = {
   TO_AUDIT: 10, // 待审核
@@ -19,6 +25,9 @@ export const AfterServiceStatus = {
   CLOSED: 60, // 已关闭
 };
 
+/**
+ * 售后类型枚举。
+ */
 // 售后类型
 export const ServiceType = {
   RETURN_GOODS: 10, // 退货退款
@@ -26,12 +35,18 @@ export const ServiceType = {
   ORDER_CANCEL: 30, // 支付后取消
 };
 
+/**
+ * 售后类型描述映射。
+ */
 export const ServiceTypeDesc = {
   [ServiceType.RETURN_GOODS]: '退货',
   [ServiceType.ONLY_REFUND]: '退款',
   [ServiceType.ORDER_CANCEL]: '支付后取消',
 };
 
+/**
+ * 订单按钮类型枚举。
+ */
 // 订单按钮类型
 export const OrderButtonTypes = {
   PAY: 1, // 付款
@@ -46,6 +61,9 @@ export const OrderButtonTypes = {
   INVITE_GROUPON: 11, //邀请好友拼团
 };
 
+/**
+ * 售后服务按钮类型枚举。
+ */
 // 售后服务按钮类型
 export const ServiceButtonTypes = {
   REVOKE: 2, // 撤销
@@ -54,6 +72,9 @@ export const ServiceButtonTypes = {
   VIEW_DELIVERY: 5, // 查看物流
 };
 
+/**
+ * 售后状态枚举。
+ */
 // 售后状态
 export const ServiceStatus = {
   PENDING_VERIFY: 100, //待审核
@@ -66,12 +87,18 @@ export const ServiceStatus = {
   CLOSED: 170, // 已关闭
 };
 
+/**
+ * 售后收货状态枚举。
+ */
 // 售后收货状态
 export const ServiceReceiptStatus = {
   RECEIPTED: 1, // 已收到货
   NOT_RECEIPTED: 2, // 未收到货
 };
 
+/**
+ * 物流节点类型枚举。
+ */
 // 物流节点
 export const LogisticsNodeTypes = {
   SUBMITTED: 200001, // 已提交订单
@@ -83,6 +110,9 @@ export const LogisticsNodeTypes = {
   IN_TRANSIT: 200007, // 运输中
 };
 
+/**
+ * 物流节点图标映射。
+ */
 export const LogisticsIconMap = {
   [LogisticsNodeTypes.SUBMITTED]: '',
   [LogisticsNodeTypes.PAYMENTED]: 'credit_card',

@@ -6,41 +6,44 @@ import { getCloudImageTempUrl } from '../../../utils/cloudImageHandler';
 import { OPERATION_TYPE } from '../../../utils/orderOperation';
 import { shouldFresh, orderListFinishFresh } from '../../../utils/orderListFresh';
 
-const ORDER_STATUS_ALL = '0';
+const ORDER_STATUS_ALL = '0'; // 全部订单状态
 
 Page({
   page: {
-    size: 5,
-    num: 1,
+    size: 5, // 每页订单数量
+    num: 1, // 当前页码
   },
 
   data: {
     tabs: [
+      // 订单状态选项卡
       { key: ORDER_STATUS_ALL, text: '全部', total: 0 },
       { key: ORDER_STATUS.TO_PAY, text: '待付款', total: 0 },
       { key: ORDER_STATUS.TO_SEND, text: '待发货', total: 0 },
       { key: ORDER_STATUS.TO_RECEIVE, text: '待收货', total: 0 },
       { key: ORDER_STATUS.FINISHED, text: '已完成', total: 0 },
     ],
-    curTab: ORDER_STATUS_ALL,
-    orderList: [],
-    listLoading: LIST_LOADING_STATUS.READY,
-    emptyImg: 'https://cdn-we-retail.ym.tencent.com/miniapp/order/empty-order-list.png',
-    backRefresh: false,
-    status: ORDER_STATUS_ALL,
-    pullDownRefreshing: false,
+    curTab: ORDER_STATUS_ALL, // 当前选中的订单状态
+    orderList: [], // 订单列表
+    listLoading: LIST_LOADING_STATUS.READY, // 列表加载状态
+    emptyImg: 'https://cdn-we-retail.ym.tencent.com/miniapp/order/empty-order-list.png', // 空列表图片
+    backRefresh: false, // 是否需要刷新
+    status: ORDER_STATUS_ALL, // 当前订单状态
+    pullDownRefreshing: false, // 是否正在下拉刷新
     loadingProps: {
-      theme: 'circular',
-      size: '40rpx',
+      theme: 'circular', // 加载图标主题
+      size: '40rpx', // 加载图标大小
     },
   },
 
   errorToast(message, e) {
+    // 显示错误提示
     console.error(message, e);
     this.toast(message);
   },
 
   toast(message) {
+    // 显示提示信息
     Toast({
       context: this,
       selector: '#t-toast',
@@ -51,6 +54,7 @@ Page({
   },
 
   onLoad(query) {
+    // 页面加载时初始化数据
     const status = this.data.tabs.find((x) => x.key === query.status)?.key ?? ORDER_STATUS_ALL;
     this.setData({
       status,
@@ -59,6 +63,7 @@ Page({
   },
 
   async pullRefresh() {
+    // 下拉刷新订单列表
     this.setData({ pullDownRefreshing: true });
     try {
       await this.onRefresh();
@@ -71,6 +76,7 @@ Page({
   },
 
   async onShow() {
+    // 页面显示时刷新数据
     if (!shouldFresh) return;
     try {
       await this.onRefresh();
@@ -81,12 +87,14 @@ Page({
   },
 
   onReachBottom() {
+    // 触底加载更多订单
     if (this.data.listLoading === LIST_LOADING_STATUS.READY) {
       this.getOrderList(this.data.curTab);
     }
   },
 
   async getOrderItems(order) {
+    // 获取订单的商品详情
     const orderId = order._id;
     try {
       const orderItems = await getAllOrderItemsOfAnOrder({ orderId });
@@ -102,6 +110,7 @@ Page({
   },
 
   async getOrderList(statusCode = ORDER_STATUS_ALL, reset = false) {
+    // 获取订单列表
     this.setData({
       listLoading: LIST_LOADING_STATUS.LOADING,
     });
@@ -130,10 +139,12 @@ Page({
   },
 
   onReTryLoad() {
+    // 重试加载订单列表
     this.getOrderList(this.data.curTab);
   },
 
   onTabChange(e) {
+    // 切换订单状态选项卡
     const { value } = e.detail;
     this.setData({
       status: value,
@@ -142,6 +153,7 @@ Page({
   },
 
   refreshList(status = ORDER_STATUS_ALL) {
+    // 刷新订单列表
     this.page = {
       size: this.page.size,
       num: 1,
@@ -152,10 +164,12 @@ Page({
   },
 
   onRefresh() {
+    // 刷新订单列表
     return this.refreshList(this.data.curTab);
   },
 
   onOrderCardTap(e) {
+    // 跳转到订单详情页面
     const { order } = e.currentTarget.dataset;
     wx.navigateTo({
       url: `/pages/order/order-detail/index?orderId=${order._id}`,
@@ -163,6 +177,7 @@ Page({
   },
 
   onOperation(e) {
+    // 处理订单操作
     const type = e?.detail?.type;
     const success = e?.detail?.success;
 

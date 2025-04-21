@@ -10,20 +10,20 @@ import { OPERATION_TYPE } from '../../../utils/orderOperation';
 
 Page({
   data: {
-    pageLoading: true,
-    order: {}, // 后台返回的原始数据
-    _order: {}, // 内部使用和提供给 order-card 的数据
-    storeDetail: {},
-    countDownTime: null,
-    addressEditable: false,
-    backRefresh: false, // 用于接收其他页面back时的状态
-    formatCreateTime: '', //格式化订单创建时间
-    logisticsNodes: [],
-    /** 订单评论状态 */
-    orderHasCommented: true,
+    pageLoading: true, // 页面加载状态
+    order: {}, // 后台返回的原始订单数据
+    _order: {}, // 内部使用的订单数据
+    storeDetail: {}, // 店铺详情
+    countDownTime: null, // 倒计时时间
+    addressEditable: false, // 地址是否可编辑
+    backRefresh: false, // 是否需要刷新
+    formatCreateTime: '', // 格式化后的订单创建时间
+    logisticsNodes: [], // 物流节点信息
+    orderHasCommented: true, // 订单是否已评价
   },
 
   toast(message) {
+    // 显示提示信息
     Toast({
       context: this,
       selector: '#t-toast',
@@ -32,6 +32,7 @@ Page({
   },
 
   onLoad({ orderId }) {
+    // 页面加载时初始化数据
     if (orderId == null) {
       toast('异常订单号');
       setTimeout(() => {
@@ -45,24 +46,26 @@ Page({
   },
 
   onShow() {
-    // 当从其他页面返回，并且 backRefresh 被置为 true 时，刷新数据
+    // 页面显示时刷新数据
     if (!this.data.backRefresh) return;
     this.onRefresh();
     this.setData({ backRefresh: false });
   },
 
   onPageScroll(e) {
+    // 处理页面滚动事件
     this.pullDownRefresh && this.pullDownRefresh.onPageScroll(e);
   },
 
   onImgError(e) {
+    // 图片加载错误处理
     if (e.detail) {
       console.error('img 加载失败');
     }
   },
 
-  // 页面初始化，会展示pageLoading
   init() {
+    // 页面初始化
     this.setData({ pageLoading: true });
     this.getStoreDetail();
     this.getDetail()
@@ -74,10 +77,9 @@ Page({
       });
   },
 
-  // 页面刷新，展示下拉刷新
   onRefresh() {
+    // 页面刷新
     this.init();
-    // 如果上一页为订单列表，通知其刷新数据
     const pages = getCurrentPages();
     const lastPage = pages[pages.length - 2];
     if (lastPage) {
@@ -85,13 +87,14 @@ Page({
     }
   },
 
-  // 页面刷新，展示下拉刷新
   onPullDownRefresh_(e) {
+    // 下拉刷新
     const { callback } = e.detail;
     return this.getDetail().then(() => callback && callback());
   },
 
   async getDetail() {
+    // 获取订单详情
     const orderId = this.orderId;
     const [order, orderItems] = await Promise.all([getOrder(orderId), getAllOrderItemsOfAnOrder({ orderId })]);
     order.orderItems = orderItems;
@@ -101,68 +104,16 @@ Page({
     order.createdTimeString = dayjs(new Date(order.createdAt)).format('YYYY-MM-DD HH:mm:ss');
 
     this.setData({ order, addressEditable: order.statusDesc === '待付款' });
-    // console.log('ha', order);
-    // return fetchOrderDetail(params).then((res) => {
-    //   const order = res.data;
-    //   const _order = {
-    //     id: order.orderId,
-    //     orderNo: order.orderNo,
-    //     parentOrderNo: order.parentOrderNo,
-    //     storeId: order.storeId,
-    //     storeName: order.storeName,
-    //     status: order.orderStatus,
-    //     statusDesc: order.orderStatusName,
-    //     amount: order.paymentAmount,
-    //     totalAmount: order.goodsAmountApp,
-    //     logisticsNo: order.logisticsVO.logisticsNo,
-    //     goodsList: (order.orderItemVOs || []).map((goods) =>
-    //       Object.assign({}, goods, {
-    //         id: goods.id,
-    //         thumb: goods.goodsPictureUrl,
-    //         title: goods.goodsName,
-    //         skuId: goods.skuId,
-    //         spuId: goods.spuId,
-    //         specs: (goods.specifications || []).map((s) => s.specValue),
-    //         price: goods.tagPrice ? goods.tagPrice : goods.actualPrice, // 商品销售单价, 优先取限时活动价
-    //         num: goods.buyQuantity,
-    //         titlePrefixTags: goods.tagText ? [{ text: goods.tagText }] : [],
-    //         buttons: goods.buttonVOs || [],
-    //       }),
-    //     ),
-    //     buttons: order.buttonVOs || [],
-    //     createTime: order.createTime,
-    //     receiverAddress: this.composeAddress(order),
-    //     groupInfoVo: order.groupInfoVo,
-    //   };
-    //   this.setData({
-    //     order,
-    //     _order,
-    //     formatCreateTime: formatTime(parseFloat(`${order.createTime}`), 'YYYY-MM-DD HH:mm'), // 格式化订单创建时间
-    //     countDownTime: this.computeCountDownTime(order),
-    //     addressEditable:
-    //       [OrderStatus.PENDING_PAYMENT, OrderStatus.PENDING_DELIVERY].includes(order.orderStatus) &&
-    //       order.orderSubStatus !== -1, // 订单正在取消审核时不允许修改地址（但是返回的状态码与待发货一致）
-    //     isPaid: !!order.paymentVO.paySuccessTime,
-    //     invoiceStatus: this.datermineInvoiceStatus(order),
-    //     invoiceDesc: order.invoiceDesc,
-    //     invoiceType: order.invoiceVO?.invoiceType === 5 ? '电子普通发票' : '不开发票', //是否开票 0-不开 5-电子发票
-    //     logisticsNodes: this.flattenNodes(order.trajectoryVos || []),
-    //   });
-    // });
   },
 
   datermineInvoiceStatus(order) {
-    // 1-已开票
-    // 2-未开票（可补开）
-    // 3-未开票
-    // 4-门店不支持开票
+    // 确定发票状态
     return order.invoiceStatus;
   },
 
-  // 拼接省市区
   composeAddress(order) {
+    // 拼接收货地址
     return [
-      //order.logisticsVO.receiverProvince,
       order.logisticsVO.receiverCity,
       order.logisticsVO.receiverCountry,
       order.logisticsVO.receiverArea,
@@ -173,6 +124,7 @@ Page({
   },
 
   getStoreDetail() {
+    // 获取店铺详情
     fetchBusinessTime().then((res) => {
       const storeDetail = {
         storeTel: res.data.telphone,
@@ -182,15 +134,14 @@ Page({
     });
   },
 
-  // 仅对待支付状态计算付款倒计时
-  // 返回时间若是大于2020.01.01，说明返回的是关闭时间，否则说明返回的直接就是剩余时间
   computeCountDownTime(order) {
+    // 计算倒计时时间
     if (order.orderStatus !== OrderStatus.PENDING_PAYMENT) return null;
     return order.autoCancelTime > 1577808000000 ? order.autoCancelTime - Date.now() : order.autoCancelTime;
   },
 
   onCountDownFinish() {
-    //this.setData({ countDownTime: -1 });
+    // 倒计时结束处理
     const { countDownTime, order } = this.data;
     if (countDownTime > 0 || (order && order.groupInfoVo && order.groupInfoVo.residueTime > 0)) {
       this.onRefresh();
@@ -198,14 +149,15 @@ Page({
   },
 
   onGoodsCardTap(e) {
+    // 跳转到商品详情页面
     const { index } = e.currentTarget.dataset;
     const goods = this.data.order.orderItemVOs[index];
     wx.navigateTo({ url: `/pages/goods/details/index?spuId=${goods.spuId}` });
   },
 
   async onEditAddressTap() {
+    // 编辑收货地址
     const deliveryInfoPromise = getAddressPromise();
-    // TODO: check url param
     wx.navigateTo({
       url: `/pages/usercenter/address/list/index?selectMode=true`,
     });
@@ -227,30 +179,35 @@ Page({
   },
 
   onOrderNumCopy() {
+    // 复制订单号
     wx.setClipboardData({
       data: this.data.order.orderNo,
     });
   },
 
   onDeliveryNumCopy() {
+    // 复制物流单号
     wx.setClipboardData({
       data: this.data.order.logisticsVO.logisticsNo,
     });
   },
 
   onToInvoice() {
+    // 跳转到发票页面
     wx.navigateTo({
       url: `/pages/order/invoice/index?orderNo=${this.data._order.orderNo}`,
     });
   },
 
   onSuppleMentInvoice() {
+    // 跳转到补开发票页面
     wx.navigateTo({
       url: `/pages/order/receipt/index?orderNo=${this.data._order.orderNo}`,
     });
   },
 
   onDeliveryClick() {
+    // 查看物流详情
     const logisticsData = {
       nodes: this.data.logisticsNodes,
       company: this.data.order.logisticsVO.logisticsCompanyName,
@@ -262,19 +219,20 @@ Page({
     });
   },
 
-  /** 跳转订单评价 */
   navToCommentCreate() {
+    // 跳转到订单评价页面
     wx.navigateTo({
       url: `/pages/order/createComment/index?orderNo=${this.orderNo}`,
     });
   },
 
-  /** 跳转拼团详情/分享页*/
   toGrouponDetail() {
+    // 跳转到拼团详情页面
     wx.showToast({ title: '点击了拼团' });
   },
 
   clickService() {
+    // 点击联系客服
     Toast({
       context: this,
       selector: '#t-toast',
@@ -283,12 +241,14 @@ Page({
   },
 
   onOrderInvoiceView() {
+    // 查看订单发票
     wx.navigateTo({
       url: `/pages/order/invoice/index?orderNo=${this.orderNo}`,
     });
   },
 
   onOperation(e) {
+    // 处理订单操作
     const type = e?.detail?.type;
     const success = e?.detail?.success;
 

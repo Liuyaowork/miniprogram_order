@@ -11,26 +11,34 @@ import { getRect, uniqueFactory } from '../common/utils';
 const { prefix } = config;
 const name = `${prefix}-badge`;
 const getUniqueID = uniqueFactory('badge');
+
 let Badge = class Badge extends SuperComponent {
     constructor() {
         super(...arguments);
+        // 启用多插槽支持
         this.options = {
             multipleSlots: true,
         };
+        // 定义外部样式类
         this.externalClasses = [`${prefix}-class`, `${prefix}-class-count`, `${prefix}-class-content`];
+        // 定义组件的属性
         this.properties = props;
+        // 定义组件的内部数据
         this.data = {
             prefix,
             classPrefix: name,
-            value: '',
-            labelID: '',
-            descriptionID: '',
-            ribbonStyle: '',
-            ribbonOuterStyle: '',
+            value: '', // 徽标的值
+            labelID: '', // 唯一标识的标签 ID
+            descriptionID: '', // 唯一标识的描述 ID
+            ribbonStyle: '', // 丝带样式
+            ribbonOuterStyle: '', // 丝带外部样式
         };
+        // 生命周期方法
         this.lifetimes = {
             ready() {
+                // 生成唯一 ID
                 const uniqueID = getUniqueID();
+                // 如果形状为丝带，计算丝带样式
                 if (this.properties.shape === 'ribbon') {
                     getRect(this, `.${prefix}-badge--ribbon`).then((rect) => {
                         const outerBoundingRect = rect.width / Math.SQRT2 + rect.height * Math.SQRT2;
@@ -46,6 +54,7 @@ let Badge = class Badge extends SuperComponent {
                         });
                     });
                 }
+                // 设置唯一标识的标签和描述 ID
                 this.setData({
                     labelID: `${uniqueID}_label`,
                     descriptionID: `${uniqueID}_description`,
@@ -57,4 +66,5 @@ let Badge = class Badge extends SuperComponent {
 Badge = __decorate([
     wxComponent()
 ], Badge);
+
 export default Badge;

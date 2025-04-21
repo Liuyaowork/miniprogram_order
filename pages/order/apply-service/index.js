@@ -11,43 +11,43 @@ import {
 } from '../../../services/order/applyService';
 
 Page({
-  query: {},
+  query: {}, // 页面查询参数
   data: {
     uploading: false, // 凭证上传状态
-    canApplyReturn: true, // 是否可退货
-    goodsInfo: {},
+    canApplyReturn: true, // 是否可以申请退货
+    goodsInfo: {}, // 商品信息
     receiptStatusList: [
       { desc: '未收到货', status: ServiceReceiptStatus.NOT_RECEIPTED },
       { desc: '已收到货', status: ServiceReceiptStatus.RECEIPTED },
-    ],
-    applyReasons: [],
-    serviceType: null, // 20-仅退款，10-退货退款
+    ], // 收货状态列表
+    applyReasons: [], // 申请原因列表
+    serviceType: null, // 售后服务类型（20-仅退款，10-退货退款）
     serviceFrom: {
-      returnNum: 1,
-      receiptStatus: { desc: '请选择', status: null },
-      applyReason: { desc: '请选择', type: null },
-      // max-填写上限(单位分)，current-当前值(单位分)，temp输入框中的值(单位元)
-      amount: { max: 0, current: 0, temp: 0, focus: false },
-      remark: '',
-      rightsImageUrls: [],
+      returnNum: 1, // 退货数量
+      receiptStatus: { desc: '请选择', status: null }, // 收货状态
+      applyReason: { desc: '请选择', type: null }, // 申请原因
+      amount: { max: 0, current: 0, temp: 0, focus: false }, // 退款金额信息
+      remark: '', // 备注信息
+      rightsImageUrls: [], // 凭证图片URL列表
     },
-    maxApplyNum: 2, // 最大可申请售后的商品数
-    amountTip: '',
-    showReceiptStatusDialog: false,
+    maxApplyNum: 2, // 最大可申请售后商品数量
+    amountTip: '', // 退款金额提示
+    showReceiptStatusDialog: false, // 是否显示收货状态对话框
     validateRes: {
-      valid: false,
-      msg: '',
+      valid: false, // 验证结果是否有效
+      msg: '', // 验证失败提示信息
     },
-    submitting: false,
-    inputDialogVisible: false,
+    submitting: false, // 是否正在提交
+    inputDialogVisible: false, // 输入对话框是否可见
     uploadGridConfig: {
-      column: 3,
-      width: 212,
-      height: 212,
+      column: 3, // 上传网格列数
+      width: 212, // 上传网格宽度
+      height: 212, // 上传网格高度
     },
-    serviceRequireType: '',
+    serviceRequireType: '', // 售后服务需求类型
   },
 
+  // 设置数据监听器
   setWatcher(key, callback) {
     let lastData = this.data;
     const keys = key.split('.');
@@ -58,6 +58,7 @@ Page({
     this.observe(lastData, lastKey, callback);
   },
 
+  // 观察数据变化
   observe(data, k, callback) {
     let val = data[k];
     Object.defineProperty(data, k, {
@@ -73,10 +74,10 @@ Page({
     });
   },
 
+  // 验证必填项
   validate() {
     let valid = true;
     let msg = '';
-    // 检查必填项
     if (!this.data.serviceFrom.applyReason.type) {
       valid = false;
       msg = '请填写退款原因';
@@ -91,6 +92,7 @@ Page({
     this.setData({ validateRes: { valid, msg } });
   },
 
+  // 页面加载时初始化
   onLoad(query) {
     this.query = query;
     if (!this.checkQuery()) return;
@@ -105,12 +107,14 @@ Page({
     this.setWatcher('serviceFrom.rightsImageUrls', this.validate.bind(this));
   },
 
+  // 初始化页面数据
   async init() {
     try {
       await this.refresh();
     } catch (e) {}
   },
 
+  // 检查查询参数是否合法
   checkQuery() {
     const { orderNo, skuId } = this.query;
     if (!orderNo) {
@@ -132,6 +136,7 @@ Page({
     return true;
   },
 
+  // 刷新页面数据
   async refresh() {
     wx.showLoading({ title: 'loading' });
     try {
@@ -166,6 +171,7 @@ Page({
     }
   },
 
+  // 获取售后预览信息
   async getRightsPreview() {
     const { orderNo, skuId, spuId } = this.query;
     const params = {
@@ -178,12 +184,14 @@ Page({
     return res;
   },
 
+  // 申请仅退款
   onApplyOnlyRefund() {
     wx.setNavigationBarTitle({ title: '申请退款' });
     this.setData({ serviceRequireType: 'REFUND_MONEY' });
     this.switchReceiptStatus(0);
   },
 
+  // 申请退货退款
   onApplyReturnGoods() {
     wx.setNavigationBarTitle({ title: '申请退货退款' });
     this.setData({ serviceRequireType: 'REFUND_GOODS' });
@@ -213,6 +221,7 @@ Page({
       });
   },
 
+  // 选择退款原因
   onApplyReturnGoodsStatus() {
     reasonSheet({
       show: true,
@@ -230,6 +239,7 @@ Page({
     });
   },
 
+  // 修改退货数量
   onChangeReturnNum(e) {
     const { value } = e.detail;
     this.setData({
@@ -237,6 +247,7 @@ Page({
     });
   },
 
+  // 选择收货状态
   onApplyGoodsStatus() {
     reasonSheet({
       show: true,
@@ -253,6 +264,7 @@ Page({
     });
   },
 
+  // 切换收货状态
   switchReceiptStatus(index) {
     const statusItem = this.data.receiptStatusList[index];
     // 没有找到对应的状态，则清空/初始化
@@ -280,6 +292,7 @@ Page({
     });
   },
 
+  // 获取申请原因列表
   getApplyReasons(receiptStatus) {
     const params = { rightsReasonType: receiptStatus };
     return fetchApplyReasonList(params)
@@ -294,11 +307,13 @@ Page({
       });
   },
 
+  // 确认收货状态对话框
   onReceiptStatusDialogConfirm(e) {
     const { index } = e.currentTarget.dataset;
     this.switchReceiptStatus(index);
   },
 
+  // 点击退款金额输入框
   onAmountTap() {
     this.setData({
       'serviceFrom.amount.temp': priceFormat(this.data.serviceFrom.amount.current),
@@ -317,7 +332,7 @@ Page({
     this.inputDialog._onCancel = () => {};
   },
 
-  // 对输入的值进行过滤
+  // 输入退款金额时过滤
   onAmountInput(e) {
     let { value } = e.detail;
     const regRes = value.match(/\d+(\.?\d*)?/); // 输入中，允许末尾为小数点
@@ -325,7 +340,7 @@ Page({
     this.setData({ 'serviceFrom.amount.temp': value });
   },
 
-  // 失去焦点时，更严格的过滤并转化为float
+  // 失去焦点时过滤退款金额
   onAmountBlur(e) {
     let { value } = e.detail;
     const regRes = value.match(/\d+(\.?\d+)?/); // 失去焦点时，不允许末尾为小数点
@@ -340,10 +355,12 @@ Page({
     });
   },
 
+  // 聚焦退款金额输入框
   onAmountFocus() {
     this.setData({ 'serviceFrom.amount.focus': true });
   },
 
+  // 修改备注
   onRemarkChange(e) {
     const { value } = e.detail;
     this.setData({
@@ -351,7 +368,7 @@ Page({
     });
   },
 
-  // 发起申请售后请求
+  // 提交售后申请
   onSubmit() {
     this.submitCheck().then(() => {
       const params = {
@@ -393,6 +410,7 @@ Page({
     });
   },
 
+  // 检查提交数据
   submitCheck() {
     return new Promise((resolve) => {
       const { msg, valid } = this.data.validateRes;
@@ -409,6 +427,7 @@ Page({
     });
   },
 
+  // 上传图片成功
   handleSuccess(e) {
     const { files } = e.detail;
     this.setData({
@@ -416,6 +435,7 @@ Page({
     });
   },
 
+  // 删除上传的图片
   handleRemove(e) {
     const { index } = e.detail;
     const {
@@ -427,12 +447,14 @@ Page({
     });
   },
 
+  // 上传完成
   handleComplete() {
     this.setData({
       uploading: false,
     });
   },
 
+  // 上传选择变化
   handleSelectChange() {
     this.setData({
       uploading: true,

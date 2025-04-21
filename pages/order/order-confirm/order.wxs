@@ -1,3 +1,8 @@
+/**
+ * 隐藏手机号中间四位数字。
+ * @param {string} array 手机号字符串。
+ * @returns {string} 返回隐藏中间四位后的手机号字符串。
+ */
 var toHide = function (array) {
   if (!array) return;
   var mphone = array.substring(0, 3) + '****' + array.substring(7);

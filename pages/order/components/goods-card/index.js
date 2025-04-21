@@ -1,38 +1,37 @@
 Component({
   options: {
-    multipleSlots: true, // 在组件定义时的选项中启用多slot支持
-    addGlobalClass: true,
+    multipleSlots: true, // 启用多slot支持
+    addGlobalClass: true, // 允许全局样式影响组件
   },
-  intersectionObserverContext: null,
+  intersectionObserverContext: null, // 用于存储IntersectionObserver上下文
 
   externalClasses: [
-    'card-class',
-    'title-class',
-    'desc-class',
-    'num-class',
-    'thumb-class',
-    'specs-class',
-    'price-class',
-    'origin-price-class',
-    'price-prefix-class',
+    'card-class', // 卡片样式类
+    'title-class', // 标题样式类
+    'desc-class', // 描述样式类
+    'num-class', // 数量样式类
+    'thumb-class', // 缩略图样式类
+    'specs-class', // 规格样式类
+    'price-class', // 价格样式类
+    'origin-price-class', // 原价样式类
+    'price-prefix-class', // 价格前缀样式类
   ],
 
   relations: {
     '../order-card/index': {
-      type: 'ancestor',
+      type: 'ancestor', // 定义父子组件关系
       linked(target) {
-        this.parent = target;
+        this.parent = target; // 保存父组件引用
       },
     },
   },
 
   properties: {
     hidden: {
-      // 设置为null代表不做类型转换
-      type: null,
+      type: null, // 不做类型转换
       value: false,
       observer(hidden) {
-        // null就是代表没有设置，没有设置的话不setData，防止祖先组件触发的setHidden操作被覆盖
+        // 监听hidden属性变化，设置组件显示/隐藏状态
         if (hidden !== null) {
           this.setHidden(!!hidden);
         }
@@ -40,10 +39,9 @@ Component({
     },
     id: {
       type: String,
-      // `goods-card-88888888`
-      // 不能在这里写生成逻辑，如果在这里写，那么假设有多个goods-list时，他们将共享这个值
       value: '',
       observer: (id) => {
+        // 生成独立ID并创建IntersectionObserver
         this.genIndependentID(id);
         if (this.properties.thresholds?.length) {
           this.createIntersectionObserverHandle();
@@ -53,21 +51,20 @@ Component({
     data: {
       type: Object,
       observer(goods) {
-        // 有ID的商品才渲染
+        // 监听商品数据变化，处理商品渲染逻辑
         if (!goods) {
           return;
         }
 
-        // 敲定换行数量默认值
+        // 设置换行数量默认值
         if (goods.lineClamp === undefined || goods.lineClamp <= 0) {
-          // tag数组长度 大于0 且 可见
-          // 指定换行为1行
           if ((goods.tags?.length || 0) > 0 && !goods.hideKey?.tags) {
-            goods.lineClamp = 1;
+            goods.lineClamp = 1; // 有标签时换行1行
           } else {
-            goods.lineClamp = 2;
+            goods.lineClamp = 2; // 默认换行2行
           }
         }
+        // 拼接规格信息
         goods.specs = goods.sku.attr_value.map((v) => v.value).join('，');
 
         this.setData({ goods });
@@ -75,50 +72,49 @@ Component({
     },
     layout: {
       type: String,
-      value: 'horizontal',
+      value: 'horizontal', // 布局方式，默认为水平布局
     },
     thumbMode: {
       type: String,
-      value: 'aspectFill',
+      value: 'aspectFill', // 缩略图模式，默认为填充模式
     },
-    thumbWidth: Number,
-    thumbHeight: Number,
+    thumbWidth: Number, // 缩略图宽度
+    thumbHeight: Number, // 缩略图高度
     priceFill: {
       type: Boolean,
-      value: true,
+      value: true, // 是否填充价格
     },
     currency: {
       type: String,
-      value: '¥',
+      value: '¥', // 货币符号，默认为人民币
     },
     lazyLoad: {
       type: Boolean,
-      value: false,
+      value: false, // 是否懒加载
     },
     centered: {
       type: Boolean,
-      value: false,
+      value: false, // 是否居中显示
     },
     showCart: {
       type: Boolean,
-      value: false,
+      value: false, // 是否显示购物车
     },
     pricePrefix: {
       type: String,
-      value: '',
+      value: '', // 价格前缀
     },
     cartSize: {
       type: Number,
-      value: 48,
+      value: 48, // 购物车图标大小
     },
     cartColor: {
       type: String,
-      value: '#FA550F',
+      value: '#FA550F', // 购物车图标颜色
     },
-    /** 元素可见监控阈值, 数组长度大于0就创建 */
     thresholds: {
       type: Array,
-      value: [],
+      value: [], // 元素可见监控阈值
       observer(current) {
         if (current && current.length) {
           this.createIntersectionObserverHandle();
@@ -129,52 +125,54 @@ Component({
     },
     specsIconClassPrefix: {
       type: String,
-      value: 'wr',
+      value: 'wr', // 规格图标类前缀
     },
     specsIcon: {
       type: String,
-      value: 'expand_more',
+      value: 'expand_more', // 规格图标
     },
     addCartIconClassPrefix: {
       type: String,
-      value: 'wr',
+      value: 'wr', // 加入购物车图标类前缀
     },
     addCartIcon: {
       type: String,
-      value: 'cart',
+      value: 'cart', // 加入购物车图标
     },
   },
 
   data: {
-    hiddenInData: false,
-    independentID: '',
-    goods: { id: '' },
-    /** 保证划线价格不小于原价，否则不渲染划线价 */
-    isValidityLinePrice: false,
+    hiddenInData: false, // 控制组件隐藏状态
+    independentID: '', // 独立ID
+    goods: { id: '' }, // 商品数据
+    isValidityLinePrice: false, // 是否显示划线价格
   },
 
   lifetimes: {
     ready() {
-      this.init();
+      this.init(); // 初始化组件
     },
     detached() {
-      this.clear();
+      this.clear(); // 清理组件
     },
   },
 
   methods: {
     clickHandle() {
+      // 触发点击事件
       this.triggerEvent('click', { goods: this.data.goods });
     },
     clickThumbHandle() {
+      // 触发缩略图点击事件
       this.triggerEvent('thumb', { goods: this.data.goods });
     },
     clickTagHandle(evt) {
+      // 触发标签点击事件
       const { index } = evt.currentTarget.dataset;
       this.triggerEvent('tag', { goods: this.data.goods, index });
     },
-    // 加入购物车
     addCartHandle(e) {
+      // 加入购物车事件
       const { id } = e.currentTarget;
       const { id: cardID } = e.currentTarget.dataset;
       this.triggerEvent('add-cart', {
@@ -185,17 +183,17 @@ Component({
       });
     },
     genIndependentID(id, cb) {
+      // 生成独立ID
       let independentID;
       if (id) {
         independentID = id;
       } else {
-        // `goods-card-88888888`
         independentID = `goods-card-${~~(Math.random() * 10 ** 8)}`;
       }
       this.setData({ independentID }, cb);
     },
-
     init() {
+      // 初始化组件逻辑
       const { thresholds, id, hidden } = this.properties;
       if (hidden !== null) {
         this.setHidden(!!hidden);
@@ -207,16 +205,16 @@ Component({
         }
       });
     },
-
     clear() {
+      // 清理IntersectionObserver
       this.clearIntersectionObserverHandle();
     },
-
     setHidden(hidden) {
+      // 设置组件隐藏状态
       this.setData({ hiddenInData: !!hidden });
     },
-
     createIntersectionObserverHandle() {
+      // 创建IntersectionObserver
       if (this.intersectionObserverContext || !this.data.independentID) {
         return;
       }
@@ -232,6 +230,7 @@ Component({
       });
     },
     intersectionObserverCB(ob) {
+      // IntersectionObserver回调
       this.triggerEvent('ob', {
         goods: this.data.goods,
         context: this.intersectionObserverContext,
@@ -239,6 +238,7 @@ Component({
       });
     },
     clearIntersectionObserverHandle() {
+      // 清理IntersectionObserver上下文
       if (this.intersectionObserverContext) {
         try {
           this.intersectionObserverContext.disconnect();

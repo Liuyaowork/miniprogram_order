@@ -1,5 +1,9 @@
 import { mockIp, mockReqId } from '../../../utils/mock';
 
+/**
+ * 模拟创建操作的 API 调用。
+ * @returns {Promise<Object>} 返回一个包含模拟响应数据的 Promise。
+ */
 export function create() {
   const _resq = {
     data: null,
@@ -13,6 +17,10 @@ export function create() {
   return Promise.resolve(_resq);
 }
 
+/**
+ * 模拟更新操作的 API 调用。
+ * @returns {Promise<Object>} 返回一个包含模拟响应数据的 Promise。
+ */
 export function update() {
   const _resq = {
     data: null,
@@ -26,6 +34,10 @@ export function update() {
   return Promise.resolve(_resq);
 }
 
+/**
+ * 获取快递公司列表的模拟 API 调用。
+ * @returns {Promise<Object>} 返回一个包含快递公司列表的 Promise。
+ */
 export function getDeliverCompanyList() {
   const _resq = {
     data: [

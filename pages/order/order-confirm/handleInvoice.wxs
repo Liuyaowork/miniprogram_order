@@ -1,3 +1,12 @@
+/**
+ * 处理发票信息并返回发票描述。
+ * @param {Object} invoiceData 发票数据对象。
+ * @param {number} invoiceData.invoiceType 发票类型，0 表示不开发票，5 表示电子普通发票。
+ * @param {number} invoiceData.titleType 发票抬头类型，1 表示个人，2 表示公司。
+ * @param {number} invoiceData.contentType 发票内容类型，1 表示商品明细，2 表示商品类别。
+ * @param {string} invoiceData.email 发票接收邮箱。
+ * @returns {string} 返回发票描述信息。
+ */
 var handleInvoice = function (invoiceData) {
   if (!invoiceData || invoiceData.invoiceType == 0) {
     return '暂不开发票';

@@ -1,3 +1,9 @@
+/**
+ * 获取指定店铺的备注信息。
+ * @param {Array} storeInfoList 店铺信息列表。
+ * @param {number} storeIndex 店铺索引。
+ * @returns {string} 返回店铺的备注信息，如果不存在则返回空字符串。
+ */
 var getNotes = function (storeInfoList, storeIndex) {
   if (!storeInfoList) {
     return '';

@@ -11,6 +11,7 @@ import { pay } from '../../../services/pay/pay';
 const stripeImg = `https://cdn-we-retail.ym.tencent.com/miniapp/order/stripe.png`;
 
 async function createOrderItemFromSku({ count, orderId, skuId }) {
+  // 从 SKU 创建订单项
   const latestSku = await getSkuDetail(skuId);
   const finalCount = latestSku.count - count;
 
@@ -46,6 +47,7 @@ async function createOrderItemFromSku({ count, orderId, skuId }) {
  * @param {String} orderId
  */
 function createOrderItemFromCartItem(cartItem, orderId) {
+  // 从购物车项创建订单项
   return createOrderItemFromSku({ count: cartItem.count, orderId, skuId: cartItem.sku._id });
 }
 
@@ -54,6 +56,7 @@ function createOrderItemFromCartItem(cartItem, orderId) {
  * @param {Array} cartItems
  */
 function cartItemToGoodList(cartItems) {
+  // 将购物车项转换为商品列表
   return cartItems.map((item) => ({
     thumb: item.sku.image,
     title: item.sku.spu.name,
@@ -65,27 +68,28 @@ function cartItemToGoodList(cartItems) {
 
 Page({
   data: {
-    placeholder: '备注信息',
-    stripeImg,
-    loading: true,
-    orderCardList: [], // 仅用于商品卡片展示
-    goodsRequestList: [],
-    userAddressReq: null,
-    storeInfoList: [],
-    promotionGoodsList: [], //当前门店商品列表(优惠券)
-    currentStoreId: null, //当前优惠券storeId
-    userAddress: null,
-    goodsList: [],
-    cartItems: [],
-    totalSalePrice: 0,
-    directSku: null,
+    placeholder: '备注信息', // 备注信息占位符
+    stripeImg, // 分隔线图片
+    loading: true, // 页面加载状态
+    orderCardList: [], // 商品卡片展示列表
+    goodsRequestList: [], // 商品请求列表
+    userAddressReq: null, // 用户地址请求
+    storeInfoList: [], // 店铺信息列表
+    promotionGoodsList: [], // 当前门店商品列表（优惠券）
+    currentStoreId: null, // 当前优惠券 storeId
+    userAddress: null, // 用户地址
+    goodsList: [], // 商品列表
+    cartItems: [], // 购物车项
+    totalSalePrice: 0, // 总售价
+    directSku: null, // 直接购买的 SKU
   },
 
-  payLock: false,
+  payLock: false, // 支付锁
 
-  type: null,
+  type: null, // 页面类型（购物车或直接购买）
 
   async onLoadFromCart(cartIds) {
+    // 从购物车加载数据
     if (typeof cartIds !== 'string') {
       console.error('invalid cart item ids', cartIds);
       this.failedAndBack('获取购物车信息失败');
@@ -113,6 +117,7 @@ Page({
     }
   },
   async onLoadFromDirect(countStr, skuId) {
+    // 从直接购买加载数据
     const count = parseInt(countStr);
     if (typeof count !== 'number' || isNaN(count) || typeof skuId !== 'string') {
       console.error('invalid cunt or skiId', count, skuId);
@@ -146,6 +151,7 @@ Page({
   },
 
   async onLoad(options) {
+    // 页面加载时初始化数据
     this.type = options?.type;
     if (this.type === 'cart') {
       await this.onLoadFromCart(options?.cartIds);
@@ -161,6 +167,7 @@ Page({
   },
 
   init() {
+    // 页面初始化
     this.setData({
       loading: false,
     });
@@ -169,6 +176,7 @@ Page({
   },
 
   toast(message) {
+    // 显示提示信息
     Toast({
       context: this,
       selector: '#t-toast',
@@ -179,6 +187,7 @@ Page({
   },
 
   onGotoAddress() {
+    // 跳转到地址选择页面
     /** 获取一个Promise */
     getAddressPromise()
       .then((address) => {
@@ -196,12 +205,14 @@ Page({
     });
   },
   onTap() {
+    // 点击备注输入框
     this.setData({
       placeholder: '',
     });
   },
 
   async payImpl(totalPrice, orderId) {
+    // 支付实现
     try {
       await pay({ id: orderId, totalPrice });
       try {
@@ -221,6 +232,7 @@ Page({
   },
 
   async submitOrderFromCart() {
+    // 从购物车提交订单
     /**
      * 1.创建订单
      * 2.创建订单项
@@ -255,6 +267,7 @@ Page({
   },
 
   async submitOrderFromDirect() {
+    // 从直接购买提交订单
     /**
      * 1.创建订单
      * 2.创建订单项
@@ -275,6 +288,7 @@ Page({
   },
 
   failedAndBack(message, e) {
+    // 失败提示并返回上一页
     e && console.error(e);
     this.toast(message);
     setTimeout(() => {

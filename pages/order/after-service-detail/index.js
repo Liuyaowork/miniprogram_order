@@ -10,22 +10,32 @@ const TitleConfig = {
 
 Page({
   data: {
+    // 页面加载状态
     pageLoading: true,
+    // 原始服务数据
     serviceRaw: {},
+    // 格式化后的服务数据
     service: {},
+    // 运单按钮数据
     deliveryButton: {},
+    // 图片画廊数据
     gallery: {
       current: 0,
       show: false,
       proofs: [],
     },
+    // 是否显示凭证
     showProofs: false,
+    // 是否需要返回刷新
     backRefresh: false,
   },
 
   onLoad(query) {
+    // 获取售后服务单号
     this.rightsNo = query.rightsNo;
+    // 获取输入对话框组件实例
     this.inputDialog = this.selectComponent('#input-dialog');
+    // 初始化页面数据
     this.init();
   },
 
@@ -42,6 +52,7 @@ Page({
     return this.getService().then(() => callback && callback());
   },
 
+  // 初始化页面数据
   init() {
     this.setData({ pageLoading: true });
     this.getService().then(() => {
@@ -49,6 +60,7 @@ Page({
     });
   },
 
+  // 获取服务详情数据
   getService() {
     const params = { rightsNo: this.rightsNo };
     return getRightsDetail(params).then((res) => {
@@ -57,6 +69,7 @@ Page({
       if (!serviceRaw.buttonVOs) serviceRaw.buttonVOs = [];
       const deliveryButton = {};
       const service = {
+        // 格式化服务数据
         id: serviceRaw.rights.rightsNo,
         serviceNo: serviceRaw.rights.rightsNo,
         storeName: serviceRaw.rights.storeName,
@@ -113,6 +126,7 @@ Page({
     });
   },
 
+  // 组合收货地址
   composeAddress(service) {
     return [
       service.logisticsVO.receiverProvince,
@@ -125,10 +139,12 @@ Page({
       .join(' ');
   },
 
+  // 刷新页面数据
   onRefresh() {
     this.init();
   },
 
+  // 编辑物流信息
   editLogistices() {
     this.setData({
       inputDialogVisible: true,
@@ -144,6 +160,7 @@ Page({
     };
   },
 
+  // 点击凭证图片
   onProofTap(e) {
     if (this.data.gallery.show) {
       this.setData({
@@ -158,18 +175,21 @@ Page({
     });
   },
 
+  // 点击商品卡片
   onGoodsCardTap(e) {
     const { index } = e.currentTarget.dataset;
     const goods = this.data.serviceRaw.rightsItem[index];
     wx.navigateTo({ url: `/pages/goods/details/index?skuId=${goods.skuId}` });
   },
 
+  // 复制服务单号
   onServiceNoCopy() {
     wx.setClipboardData({
       data: this.data.service.serviceNo,
     });
   },
 
+  // 复制收货地址
   onAddressCopy() {
     wx.setClipboardData({
       data: `${this.data.service.receiverName}  ${this.data.service.receiverPhone}\n${this.data.service.receiverAddress}`,

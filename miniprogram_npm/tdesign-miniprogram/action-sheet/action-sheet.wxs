@@ -1,18 +1,21 @@
+// 根据传入的属性生成列表项的类名
 var getListThemeItemClass = function (props) {
-  var classPrefix = props.classPrefix;
-  var item = props.item;
-  var prefix = props.prefix;
-  var classList = [classPrefix + '__list-item'];
+  var classPrefix = props.classPrefix; // 类名前缀
+  var item = props.item; // 列表项对象
+  var prefix = props.prefix; // 额外的前缀
+  var classList = [classPrefix + '__list-item']; // 初始化类名数组
   if (item.disabled) {
-    classList.push(prefix + '-is-disabled');
+    classList.push(prefix + '-is-disabled'); // 如果列表项被禁用，添加禁用类名
   }
-  return classList.join(' ');
+  return classList.join(' '); // 返回拼接后的类名字符串
 };
 
+// 判断名称是否为图片路径
 var isImage = function (name) {
-  return name.indexOf('/') !== -1;
+  return name.indexOf('/') !== -1; // 如果名称中包含 '/'，则认为是图片路径
 };
 
+// 导出模块中的函数
 module.exports = {
   getListThemeItemClass: getListThemeItemClass,
   isImage: isImage,

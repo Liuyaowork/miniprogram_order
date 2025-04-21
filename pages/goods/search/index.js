@@ -1,26 +1,29 @@
+// 引入服务层函数
 import { getSearchHistory, getSearchPopular } from '../../../services/good/fetchSearchHistory';
 
 Page({
   data: {
-    historyWords: [],
-    popularWords: [],
-    searchValue: '',
+    historyWords: [], // 搜索历史记录
+    popularWords: [], // 热门搜索词
+    searchValue: '', // 当前搜索值
     dialog: {
-      title: '确认删除当前历史记录',
-      showCancelButton: true,
-      message: '',
+      title: '确认删除当前历史记录', // 弹窗标题
+      showCancelButton: true, // 是否显示取消按钮
+      message: '', // 弹窗消息
     },
-    dialogShow: false,
+    dialogShow: false, // 是否显示弹窗
   },
 
-  deleteType: 0,
-  deleteIndex: '',
+  deleteType: 0, // 删除类型（0：单条，1：全部）
+  deleteIndex: '', // 删除的索引
 
+  // 页面显示时查询历史记录和热门搜索词
   onShow() {
     this.queryHistory();
     this.queryPopular();
   },
 
+  // 查询搜索历史记录
   async queryHistory() {
     try {
       const data = await getSearchHistory();
@@ -36,6 +39,7 @@ Page({
     }
   },
 
+  // 查询热门搜索词
   async queryPopular() {
     try {
       const data = await getSearchPopular();
@@ -51,6 +55,7 @@ Page({
     }
   },
 
+  // 确认删除历史记录
   confirm() {
     const { historyWords } = this.data;
     const { deleteType, deleteIndex } = this;
@@ -65,10 +70,12 @@ Page({
     }
   },
 
+  // 关闭弹窗
   close() {
     this.setData({ dialogShow: false });
   },
 
+  // 清空所有历史记录
   handleClearHistory() {
     const { dialog } = this.data;
     this.deleteType = 1;
@@ -81,6 +88,7 @@ Page({
     });
   },
 
+  // 删除单条历史记录
   deleteCurr(e) {
     const { index } = e.currentTarget.dataset;
     const { dialog } = this.data;
@@ -95,6 +103,7 @@ Page({
     });
   },
 
+  // 点击历史记录进行搜索
   handleHistoryTap(e) {
     const { historyWords } = this.data;
     const { dataset } = e.currentTarget;
@@ -106,6 +115,7 @@ Page({
     }
   },
 
+  // 提交搜索
   handleSubmit(e) {
     const value = e?.detail?.value;
     if (!value) return;

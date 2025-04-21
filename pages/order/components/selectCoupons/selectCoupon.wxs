@@ -1,16 +1,21 @@
+// 格式化天数，如果小于 10，则在前面补 0
 function formatDays(value) {
   if (value < 10) {
     return '0' + value;
   }
   return value;
 }
+
+// 格式化日期为 YYYY-MM-DD 格式
 var dateFormat = function (d) {
-  var date = getDate(+d);
+  var date = getDate(+d); // 将输入的时间戳转换为日期对象
   return (
-    date.getFullYear() +
+    date.getFullYear() + // 获取年份
     '-' +
-    formatDays(date.getMonth() + 1) +
-    formatDays(date.getDate())
+    formatDays(date.getMonth() + 1) + // 获取月份（从 0 开始，因此需要加 1）
+    formatDays(date.getDate()) // 获取日期
   );
 };
+
+// 导出 dateFormat 函数
 module.exports.dateFormat = dateFormat;

@@ -4,13 +4,28 @@ Page({
   data: {
     invoice: {},
   },
+
+  /**
+   * 页面加载时触发，初始化订单号并调用初始化方法。
+   * @param {Object} param 页面传递的参数。
+   * @param {string} param.orderNo 订单号。
+   */
   onLoad({ orderNo }) {
     this.orderNo = orderNo;
     this.init();
   },
+
+  /**
+   * 初始化页面数据。
+   */
   init() {
     this.getDetail();
   },
+
+  /**
+   * 获取订单详情并提取发票信息。
+   * @returns {Promise<void>} 返回一个 Promise，表示获取详情的异步操作。
+   */
   getDetail() {
     const params = {
       parameter: this.orderNo,

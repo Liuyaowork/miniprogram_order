@@ -87,6 +87,9 @@ function __generator(thisArg, body) {
     }
 }
 
+/**
+ * 自定义错误类，用于处理 WxCloud SDK 错误
+ */
 var WxCloudSDKError = /** @class */ (function (_super) {
     __extends(WxCloudSDKError, _super);
     function WxCloudSDKError(message, extra) {
@@ -101,8 +104,7 @@ var WxCloudSDKError = /** @class */ (function (_super) {
 }(Error));
 
 /**
- * 获取全局对象 window
- *  小程序中可用, 但小程序中对象信息残缺, 无法访问 navigator 对象, ua 信息也无意义
+ * 获取全局对象（如 window 或 globalThis）
  */
 function getGlobalObj() {
     // @ts-ignore
@@ -152,6 +154,11 @@ function getUserAgent() {
 }
 var VERSION = "1.2.1";
 
+/**
+ * 调用数据源的方法
+ * @param {Object} _a 参数对象
+ * @returns {Promise<Object>} 返回调用结果
+ */
 var callDataSource = function (_a) {
     var dataSourceName = _a.dataSourceName, methodName = _a.methodName, params = _a.params, realMethodName = _a.realMethodName, callFunction = _a.callFunction, _b = _a.envType, envType = _b === void 0 ? 'prod' : _b, mode = _a.mode;
     return __awaiter(void 0, void 0, void 0, function () {
@@ -214,6 +221,12 @@ var callDataSource = function (_a) {
         });
     });
 };
+
+/**
+ * 执行 MySQL 命令
+ * @param {Object} _a 参数对象
+ * @returns {Promise<Object>} 返回执行结果
+ */
 var runMysqlCommand = function (_a) {
     var sql = _a.sql, params = _a.params, config = _a.config, callFunction = _a.callFunction, _b = _a.unsafe, unsafe = _b === void 0 ? false : _b;
     return __awaiter(void 0, void 0, void 0, function () {
@@ -317,6 +330,13 @@ var CRUD_METHODS = {
         }
     }
 };
+
+/**
+ * 根据数据源名称生成客户端
+ * @param {string} dataSourceName 数据源名称
+ * @param {Function} callFunction 调用函数
+ * @returns {Object} 返回生成的客户端
+ */
 var generateClientByDataSourceName = function (dataSourceName, callFunction) {
     var client = new Proxy({}, {
         get: function (target, methodName) {
@@ -357,7 +377,12 @@ var generateClientByDataSourceName = function (dataSourceName, callFunction) {
     });
     return client;
 };
-// 使用 TypeScript 的 Proxy 来定义一个动态的客户端
+
+/**
+ * 生成动态客户端
+ * @param {Function} callFunction 调用函数
+ * @returns {Object} 返回生成的客户端
+ */
 var generateClient = function (callFunction) {
     var rawQueryClient = {
         $runSQL: function (sql, params, config) {
@@ -379,7 +404,7 @@ var generateClient = function (callFunction) {
             });
         },
         $runSQLRaw: function (sql, config) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter(void 0, void 0, void 0, function () {
                 var res;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
@@ -410,6 +435,11 @@ var generateClient = function (callFunction) {
     });
 };
 
+/**
+ * 初始化云开发客户端
+ * @param {Object} cloud 云开发对象
+ * @returns {Object} 返回初始化后的云开发对象
+ */
 function init(cloud) {
     if (!cloud) {
         throw new Error('cloud is required');
@@ -418,7 +448,7 @@ function init(cloud) {
         throw new Error('cloud.callFunction is required');
     }
     var OrmClientImpl = generateClient(cloud.callFunction.bind(cloud));
-    cloud.models = OrmClientImpl;
+    cloud.models = OrmClientImpl; // 将生成的客户端挂载到 cloud 对象上
     return cloud;
 }
 

@@ -6,58 +6,64 @@ import { LIST_LOADING_STATUS } from '../../utils/listLoading';
 
 Page({
   data: {
-    imgSrcs: [],
-    tabList: [],
-    goodsList: [],
-    goodsListLoadStatus: LIST_LOADING_STATUS.READY,
-    pageLoading: false,
-    current: 1,
-    autoplay: true,
-    duration: '500',
-    interval: 5000,
-    navigation: { type: 'dots' },
-    swiperImageProps: { mode: 'scaleToFill' }
+    imgSrcs: [], // 轮播图图片地址
+    tabList: [], // 标签列表
+    goodsList: [], // 商品列表
+    goodsListLoadStatus: LIST_LOADING_STATUS.READY, // 商品列表加载状态
+    pageLoading: false, // 页面加载状态
+    current: 1, // 当前轮播图索引
+    autoplay: true, // 是否自动播放轮播图
+    duration: '500', // 轮播图切换动画时长
+    interval: 5000, // 轮播图切换间隔时间
+    navigation: { type: 'dots' }, // 轮播图导航样式
+    swiperImageProps: { mode: 'scaleToFill' } // 轮播图图片样式
   },
 
   goodListPagination: {
-    index: 1,
-    num: 20,
+    index: 1, // 当前分页索引
+    num: 20, // 每页加载的商品数量
   },
 
   privateData: {
-    tabIndex: 0,
+    tabIndex: 0, // 当前选中的标签索引
   },
 
   onShow() {
+    // 初始化自定义 tabBar
     this.getTabBar().init();
   },
 
   onLoad() {
+    // 页面加载时初始化数据
     this.init();
   },
 
   onReachBottom() {
+    // 触底加载更多商品
     if (this.data.goodsListLoadStatus === LIST_LOADING_STATUS.READY) {
       this.loadGoodsList();
     }
   },
 
   onPullDownRefresh() {
+    // 下拉刷新页面
     this.init();
   },
 
   async init() {
-    wx.stopPullDownRefresh();
+    // 初始化页面数据
+    wx.stopPullDownRefresh(); // 停止下拉刷新动画
 
     this.setData({
       pageLoading: false,
     });
 
-    this.loadGoodsList(true);
-    this.loadHomeSwiper();
+    this.loadGoodsList(true); // 加载商品列表
+    this.loadHomeSwiper(); // 加载轮播图数据
   },
 
   async loadHomeSwiper() {
+    // 加载轮播图数据
     const { images } = await getHomeSwiper();
     const handledImages = await getCloudImageTempUrl(images);
 
@@ -65,13 +71,15 @@ Page({
   },
 
   onReTry() {
+    // 重新加载商品列表
     this.loadGoodsList();
   },
 
   async loadGoodsList(fresh = false) {
+    // 加载商品列表
     if (fresh) {
       wx.pageScrollTo({
-        scrollTop: 0,
+        scrollTop: 0, // 滚动到页面顶部
       });
     }
 
@@ -103,6 +111,7 @@ Page({
   },
 
   goodListClickHandle(e) {
+    // 商品点击事件处理
     const spuId = e?.detail?.goods?._id;
     if (typeof spuId !== 'string') return;
     wx.navigateTo({
@@ -111,6 +120,7 @@ Page({
   },
 
   goodListAddCartHandle(e) {
+    // 添加商品到购物车事件处理
     const spuId = e?.detail?.goods?._id;
     if (typeof spuId !== 'string') return;
     wx.navigateTo({
@@ -119,10 +129,12 @@ Page({
   },
 
   navToSearchPage() {
+    // 跳转到搜索页面
     wx.navigateTo({ url: '/pages/goods/search/index' });
   },
 
   navToActivityDetail({ detail }) {
+    // 跳转到活动详情页面
     const { index: promotionID = 0 } = detail || {};
     wx.navigateTo({
       url: `/pages/promotion-detail/index?promotion_id=${promotionID}`,

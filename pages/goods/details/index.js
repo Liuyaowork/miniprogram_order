@@ -1,4 +1,4 @@
-// 第三方库
+// 引入第三方库和服务层函数
 import Toast from 'tdesign-miniprogram/toast/index';
 
 // 服务层
@@ -19,6 +19,7 @@ const imgPrefix = `${cdnBase}/`;
 const recLeftImg = `${imgPrefix}common/rec-left.png`;
 const recRightImg = `${imgPrefix}common/rec-right.png`;
 
+// 替换云存储图片链接为临时链接
 async function replaceCloudImageWithTempUrl(text) {
   let ret = text;
 
@@ -39,21 +40,22 @@ async function replaceCloudImageWithTempUrl(text) {
 }
 
 const OUT_OPERATE_STATUS = {
-  CART: 'cart',
-  BUY: 'buy',
-  NO: 'no',
+  CART: 'cart', // 加入购物车
+  BUY: 'buy',   // 立即购买
+  NO: 'no',     // 无操作
 };
 
 Page({
   data: {
-    commentsList: [],
+    // 页面数据初始化
+    commentsList: [], // 评论列表
     commentsStatistics: {
-      badCount: 0,
-      commentCount: 0,
-      goodCount: 0,
-      goodRate: 0,
-      hasImageCount: 0,
-      middleCount: 0,
+      badCount: 0, // 差评数量
+      commentCount: 0, // 总评论数
+      goodCount: 0, // 好评数量
+      goodRate: 0, // 好评率
+      hasImageCount: 0, // 带图片评论数
+      middleCount: 0, // 中评数量
     },
     isShowPromotionPop: false,
     activityList: [],
@@ -102,6 +104,7 @@ Page({
     loading: false,
   },
 
+  // 设置加载状态
   setLoading() {
     this.setData({ loading: true });
   },
@@ -109,16 +112,19 @@ Page({
     this.setData({ loading: false });
   },
 
+  // 隐藏规格选择弹窗
   handlePopupHide() {
     this.setData({
       isSpuSelectPopupShow: false,
     });
   },
 
+  // 点击规格选择按钮
   onSpecSelectTap() {
     this.showSkuSelectPopup(OUT_OPERATE_STATUS.NO);
   },
 
+  // 显示规格选择弹窗
   showSkuSelectPopup(status) {
     this.setData({
       outOperateStatus: status,
@@ -126,14 +132,17 @@ Page({
     });
   },
 
+  // 立即购买
   buyItNow() {
     this.showSkuSelectPopup(OUT_OPERATE_STATUS.BUY);
   },
 
+  // 加入购物车
   toAddCart() {
     this.showSkuSelectPopup(OUT_OPERATE_STATUS.CART);
   },
 
+  // 导航到指定页面
   toNav(e) {
     const { url } = e.detail;
     wx.switchTab({
@@ -141,6 +150,7 @@ Page({
     });
   },
 
+  // 预览图片
   showCurImg(e) {
     const { index } = e.detail;
     const { images } = this.data.details;
@@ -150,11 +160,13 @@ Page({
     });
   },
 
+  // 页面滚动事件
   onPageScroll({ scrollTop }) {
     const goodsTab = this.selectComponent('#goodsTab');
     goodsTab && goodsTab.onScroll(scrollTop);
   },
 
+  // 选择规格项
   chooseSpecItem(e) {
     const { specList } = this.data.details;
     const { selectedSku, isAllSelectedSku } = e.detail;
@@ -330,6 +342,7 @@ Page({
     });
   },
 
+  // 获取商品详情信息
   async getInfo(spuId) {
     // pics
     // min price
@@ -406,6 +419,7 @@ Page({
     });
   },
 
+  // 页面加载时获取商品信息
   async onLoad(query) {
     const { spuId } = query;
     this.setLoading();

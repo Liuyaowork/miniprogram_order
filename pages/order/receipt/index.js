@@ -4,6 +4,7 @@ import Toast from 'tdesign-miniprogram/toast/index';
 import { dispatchSupplementInvoice } from '../../../services/order/orderConfirm';
 
 const invoiceJson = {
+  // 发票相关的说明信息
   info: [
     '1.根据当地税务局的要求，开具有效的企业发票需填写税务局登记证号。开具个人发票不需要填写纳税人识别码。 ',
     '2.电子普通发票： 电子普通发票是税局认可的有效首付款凭证，其法律效力、基本用途及使用规定同纸质发票，如需纸质发票可自行下载打印。 ',
@@ -16,33 +17,38 @@ const invoiceJson = {
 };
 
 Page({
-  orderNo: '',
+  orderNo: '', // 当前订单号
   data: {
-    receiptIndex: 0,
-    addressTagsIndex: 0,
-    goodsClassesIndex: 0,
-    dialogShow: false,
-    codeShow: false,
+    // 页面数据初始化
+    receiptIndex: 0, // 发票类型索引
+    addressTagsIndex: 0, // 地址标签索引
+    goodsClassesIndex: 0, // 商品分类索引
+    dialogShow: false, // 是否显示对话框
+    codeShow: false, // 是否显示税号说明
     receipts: [
+      // 发票类型选项
       { title: '不开发票', id: 0, name: 'receipt' },
       { title: '电子发票', id: 1, name: 'receipt' },
     ],
     addressTags: [
+      // 地址标签选项
       { title: '个人', id: 0, name: 'addressTags', type: 1 },
       { title: '公司', id: 1, name: 'addressTags', type: 2 },
     ],
     goodsClasses: [
+      // 商品分类选项
       { title: '商品明细', id: 0, name: 'goodsClasses' },
       { title: '商品类别', id: 1, name: 'goodsClasses' },
     ],
-    name: '',
-    componentName: '',
-    code: '',
-    phone: '',
-    email: '',
-    invoiceInfo: invoiceJson,
+    name: '', // 个人名称
+    componentName: '', // 公司名称
+    code: '', // 税号
+    phone: '', // 联系电话
+    email: '', // 邮箱
+    invoiceInfo: invoiceJson, // 发票说明信息
   },
   onLoad(query) {
+    // 页面加载时初始化数据
     const { orderNo, invoiceData } = query;
     const tempData = JSON.parse(invoiceData || '{}');
     const invoice = {
@@ -59,11 +65,13 @@ Page({
     this.setData({ ...invoice });
   },
   onLabels(e) {
+    // 处理标签点击事件
     const { item } = e.currentTarget.dataset;
     const nameIndex = `${item.name}Index`;
     this.setData({ [nameIndex]: item.id });
   },
   onInput(e) {
+    // 处理输入框输入事件
     const { addressTagsIndex } = this.data;
     const { item } = e.currentTarget.dataset;
     const { value } = e.detail;
@@ -80,6 +88,7 @@ Page({
     this.setData({ [key]: value });
   },
   onSure() {
+    // 确认发票信息并提交
     const result = this.checkSure();
     if (!result) {
       Dialog.alert({
@@ -148,6 +157,7 @@ Page({
     }
   },
   checkSure() {
+    // 校验发票信息是否完整
     const { name, componentName, code, phone, email, addressTagsIndex, receiptIndex } = this.data;
     if (receiptIndex === 0) {
       return true;
@@ -167,6 +177,7 @@ Page({
     return true;
   },
   onDialogTap() {
+    // 切换对话框显示状态
     const { dialogShow } = this.data;
     this.setData({
       dialogShow: !dialogShow,
@@ -174,6 +185,7 @@ Page({
     });
   },
   onKnoeCode() {
+    // 显示税号说明
     this.setData({
       dialogShow: !this.data.dialogShow,
       codeShow: true,

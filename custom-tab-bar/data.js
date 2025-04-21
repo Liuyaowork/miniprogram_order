@@ -1,22 +1,22 @@
 export default [
   {
-    icon: 'home',
-    text: '首页',
-    url: 'pages/home/home',
+    icon: 'home', // 图标名称
+    text: '首页', // 显示的文本
+    url: 'pages/home/home', // 对应的页面路径
   },
   {
-    icon: 'sort',
-    text: '下单',
-    url: 'pages/goods/category/index',
+    icon: 'sort', // 图标名称
+    text: '下单', // 显示的文本
+    url: 'pages/goods/category/index', // 对应的页面路径
   },
   {
-    icon: 'cart',
-    text: '购物车',
-    url: 'pages/cart/index',
+    icon: 'cart', // 图标名称
+    text: '购物车', // 显示的文本
+    url: 'pages/cart/index', // 对应的页面路径
   },
   {
-    icon: 'person',
-    text: '个人中心',
-    url: 'pages/usercenter/index',
+    icon: 'person', // 图标名称
+    text: '个人中心', // 显示的文本
+    url: 'pages/usercenter/index', // 对应的页面路径
   },
 ];
