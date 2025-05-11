@@ -1,30 +1,24 @@
 module.exports = {
-  // 根据传入的参数生成类名字符串
   getClass: function (classPrefix, size, shape, bordered) {
-    var hasPx = (size || '').indexOf('px') > -1; // 判断 size 是否包含 'px'
-    var borderSize = hasPx ? 'medium' : size; // 如果包含 'px'，边框大小为 'medium'，否则为 size
+    var hasPx = (size || '').indexOf('px') > -1;
+    var borderSize = hasPx ? 'medium' : size;
     var classNames = [
-      classPrefix, // 基础类名
-      classPrefix + (shape === 'round' ? '--round' : '--circle'), // 根据形状添加类名
-      bordered ? classPrefix + '--border' + ' ' + classPrefix + '--border-' + borderSize : '', // 如果有边框，添加边框类名
-      hasPx ? '' : classPrefix + '--' + size, // 如果 size 不包含 'px'，添加对应的大小类名
+      classPrefix,
+      classPrefix + (shape === 'round' ? '--round' : '--circle'),
+      bordered ? classPrefix + '--border' + ' ' + classPrefix + '--border-' + borderSize : '',
+      hasPx ? '' : classPrefix + '--' + size,
     ];
-    return classNames.join(' '); // 返回拼接后的类名字符串
+    return classNames.join(' ');
   },
 
-  // 根据 size 生成内联样式字符串
   getSize: function (size = 'medium') {
-    var pxIndex = size.indexOf('px'); // 判断 size 是否包含 'px'
+    var pxIndex = size.indexOf('px');
     if (pxIndex > -1) {
-      // 如果包含 'px'，生成宽高和字体大小的样式
       return 'width:' + size + ';height:' + size + ';font-size:' + ((size.slice(0, pxIndex) / 8) * 3 + 2) + 'px;';
     }
   },
 
-  // 根据显示状态和层级生成内联样式字符串
-  getStyles: function (isShow, zIndex) {
-    var displayStyle = isShow ? '' : 'display: none;'; // 如果不显示，添加隐藏样式
-    var zIndexStyle = zIndex ? 'z-index:' + zIndex + ';' : ''; // 如果有 zIndex，添加层级样式
-    return displayStyle + zIndexStyle; // 返回拼接后的样式字符串
+  getStyles: function (isShow) {
+    return isShow ? '' : 'display: none;';
   },
 };

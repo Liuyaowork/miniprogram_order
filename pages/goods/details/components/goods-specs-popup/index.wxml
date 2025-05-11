@@ -1,20 +1,33 @@
 <t-popup visible="{{show}}" placement="bottom" bind:visible-change="handlePopupHide">
+  <!-- 弹窗组件，显示在底部 -->
   <view class="popup-container">
+    <!-- 弹窗内容容器 -->
     <view class="popup-close" bindtap="handlePopupHide">
+      <!-- 关闭按钮 -->
       <t-icon name="close" size="36rpx" />
     </view>
     <view class="popup-sku-header">
+      <!-- 弹窗头部，显示商品信息 -->
       <t-image t-class="popup-sku-header__img" src="{{imgSrc}}" />
+      <!-- 商品图片 -->
       <view class="popup-sku-header__goods-info">
         <view class="popup-sku__goods-name">{{title}}</view>
+        <!-- 商品名称 -->
         <view class="goods-price-container">
+          <!-- 商品价格 -->
           <price price="{{price * 100}}" wr-class="popup-sku__price-num" symbol-class="popup-sku__price-symbol" />
         </view>
-        <!-- 已选规格 -->
         <view class="popup-sku__selected-spec">
+          <!-- 已选规格 -->
           <view>选择：</view>
           <view wx:for="{{attrList}}" wx:key="specId">
-            <view class="popup-sku__selected-item" wx:for="{{item.values}}" wx:for-item="selectedItem" wx:if="{{selectedItem.status === 'picked'}}" wx:key="_id">
+            <view
+              class="popup-sku__selected-item"
+              wx:for="{{item.values}}"
+              wx:for-item="selectedItem"
+              wx:if="{{selectedItem.status === 'picked'}}"
+              wx:key="_id"
+            >
               {{selectedItem.value}}
             </view>
           </view>
@@ -22,42 +35,78 @@
       </view>
     </view>
     <view class="popup-sku-body">
+      <!-- 弹窗主体，显示规格选择 -->
       <view class="popup-sku-group-container">
         <view class="popup-sku-row" wx:for="{{attrList}}" wx:key="specId">
+          <!-- 遍历规格组 -->
           <view class="popup-sku-row__title">{{item.name}}</view>
+          <!-- 规格组名称 -->
           <block wx:for="{{item.values}}" wx:for-item="valuesItem" wx:for-index="valuesIndex" wx:key="_id">
-            <view class="popup-sku-row__item {{valuesItem.status === 'picked' ? 'popup-sku-row__item--active' : ''}} {{valuesItem.status === 'disabled' ? 'disabled-sku-selected' : ''}}" data-attr-name-index="{{index}}" data-attr-value-index="{{valuesIndex}}" bindtap="clickAttrValue">
+            <!-- 遍历规格值 -->
+            <view
+              class="popup-sku-row__item {{valuesItem.status === 'picked' ? 'popup-sku-row__item--active' : ''}} {{valuesItem.status === 'disabled' ? 'disabled-sku-selected' : ''}}"
+              data-attr-name-index="{{index}}"
+              data-attr-value-index="{{valuesIndex}}"
+              bindtap="clickAttrValue"
+            >
               {{valuesItem.value}}
             </view>
           </block>
         </view>
       </view>
       <view class="popup-sku-stepper-stock">
+        <!-- 购买数量选择 -->
         <view class="popup-sku-stepper-container">
           <view class="popup-sku__stepper-title">
             购买数量
             <view class="limit-text" wx:if="{{limitBuyInfo}}">({{limitBuyInfo}})</view>
+            <!-- 限购提示 -->
           </view>
-          <t-stepper value="{{value}}" min="{{1}}" max="{{max}}" theme="filled" bind:change="handleBuyNumChange" bind:blur="onBlur" />
+          <t-stepper
+            value="{{value}}"
+            min="{{1}}"
+            max="{{max}}"
+            theme="filled"
+            bind:change="handleBuyNumChange"
+            bind:blur="onBlur"
+          />
+          <!-- 数量选择器 -->
         </view>
       </view>
     </view>
-    <view wx:if="{{outOperateStatus !== 'no'}}" class="single-confirm-btn {{pickedSku == null ? 'disabled' : ''}}" bindtap="specsConfirm">
+    <view
+      wx:if="{{outOperateStatus !== 'no'}}"
+      class="single-confirm-btn {{pickedSku == null ? 'disabled' : ''}}"
+      bindtap="specsConfirm"
+    >
+      <!-- 确定按钮 -->
       确定
     </view>
-    <view class="popup-sku-actions flex flex-between {{!isStock ? 'popup-sku-disabled' : ''}}" wx:if="{{outOperateStatus === 'no'}}">
+    <view
+      class="popup-sku-actions flex flex-between {{!isStock ? 'popup-sku-disabled' : ''}}"
+      wx:if="{{outOperateStatus === 'no'}}"
+    >
+      <!-- 操作按钮 -->
       <view class="sku-operate">
-        <view class="selected-sku-btn sku-operate-addCart {{pickedSku == null ? 'disabled' : ''}}" bindtap="addCart">
+        <view
+          class="selected-sku-btn sku-operate-addCart {{pickedSku == null ? 'disabled' : ''}}"
+          bindtap="addCart"
+        >
           加入购物车
         </view>
       </view>
       <view class="sku-operate">
-        <view class="selected-sku-btn sku-operate-buyNow  {{pickedSku == null ? 'disabled' : ''}}" bindtap="buyNow">
+        <view
+          class="selected-sku-btn sku-operate-buyNow {{pickedSku == null ? 'disabled' : ''}}"
+          bindtap="buyNow"
+        >
           立即购买
         </view>
       </view>
     </view>
     <slot name="bottomSlot" />
+    <!-- 底部插槽 -->
   </view>
 </t-popup>
 <t-toast id="t-toast" />
+<!-- 全局提示组件 -->

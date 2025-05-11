@@ -1,13 +1,15 @@
 <wxs module="isUrl">
+	// 判断字符串是否为 URL
 	var isUrl = function(item) {
-	return item.indexOf('http') > -1;
+		return item.indexOf('http') > -1;
 	}
 	module.exports = {
-	isUrl: isUrl,
+		isUrl: isUrl,
 	}
 </wxs>
 
 <view class="page-section cells" wx:if="{{logisticsData.logisticsNo || logisticsData.company}}">
+	<!-- 快递信息部分 -->
 	<t-cell-group>
 		<t-cell
 		  title="快递单号"
@@ -17,13 +19,16 @@
 		  wx:if="{{logisticsData.logisticsNo}}"
 		  bordered="{{false}}"
 		>
+			<!-- 显示快递单号 -->
 			<text slot="note" class="logistics-no">{{logisticsData.logisticsNo}}</text>
 			<view
 			  slot="right-icon"
 			  class="text-btn"
 			  hover-class="text-btn--active"
 			  bindtap="onLogisticsNoCopy"
-			>复制
+			>
+				复制
+				<!-- 复制按钮 -->
 			</view>
 		</t-cell>
 		<t-cell
@@ -35,6 +40,7 @@
 		  wx:if="{{logisticsData.company}}"
 		  note="{{logisticsData.company + (logisticsData.phoneNumber ? '-' + logisticsData.phoneNumber : '')}}"
 		>
+			<!-- 显示物流公司信息 -->
 			<view
 			  slot="right-icon"
 			  class="text-btn"
@@ -43,11 +49,14 @@
 			  wx:if="{{logisticsData.phoneNumber}}"
 			>
 				拨打
+				<!-- 拨打电话按钮 -->
 			</view>
 		</t-cell>
 	</t-cell-group>
 </view>
+
 <view class="page-section cell-steps">
+	<!-- 物流进度部分 -->
 	<t-steps
 	  class="page-section__steps"
 	  t-class="steps"
@@ -64,6 +73,7 @@
 		  title="{{item.title}}"
 		  icon="slot"
 		>
+			<!-- 判断是否为图片 URL -->
 			<block wx:if="{{isUrl.isUrl(item.icon)}}">
 				<t-image
 				  class="cell-steps__imgWrapper"
@@ -71,6 +81,7 @@
 				  t-class="cell-steps__img"
 				  src="{{item.icon}}"
 				/>
+				<!-- 显示图片图标 -->
 			</block>
 			<block wx:else>
 				<t-icon
@@ -80,8 +91,10 @@
 				  color="{{index === 0 ? '#ef5433' : '#bbb'}}"
 				  name="{{item.icon}}"
 				/>
+				<!-- 显示默认图标 -->
 			</block>
 			<view slot="content">
+				<!-- 物流节点描述 -->
 				<view class="step-desc">{{item.desc}}</view>
 				<view class="step-date">{{item.date}}</view>
 			</view>

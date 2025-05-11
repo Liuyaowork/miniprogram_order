@@ -1,5 +1,10 @@
 <view class="page-container">
-  <t-pull-down-refresh id="t-pull-down-refresh" bindrefresh="onPullDownRefresh_" t-class-indicator="t-class-indicator">
+  <t-pull-down-refresh 
+    id="t-pull-down-refresh" 
+    bindrefresh="onPullDownRefresh_" 
+    t-class-indicator="t-class-indicator"
+  >
+    <!-- 售后订单卡片 -->
     <wr-order-card
       wx:for="{{dataList}}"
       wx:key="id"
@@ -11,12 +16,14 @@
       useTopRightSlot
       header-class="header-class"
     >
+      <!-- 卡片右上角显示售后类型 -->
       <view class="text-btn" slot="top-right">
         <view class="header__right">
           <t-icon prefix="wr" color="#FA4126" name="goods_refund" size="20px" slot="left-icon" />
           {{order.typeDesc}}
         </view>
       </view>
+      <!-- 商品列表 -->
       <wr-goods-card
         wx:for="{{order.goodsList}}"
         wx:key="id"
@@ -26,6 +33,7 @@
         no-top-line="{{gIndex === 0}}"
       >
         <view slot="footer" class="order-goods-card-footer">
+          <!-- 商品退款金额 -->
           <wr-price
             price="{{goods.itemRefundAmount}}"
             fill
@@ -33,9 +41,11 @@
             symbol-class="order-goods-card-footer-price-symbol"
             decimal-class="order-goods-card-footer-price-decimal"
           />
+          <!-- 商品退款数量 -->
           <view class="order-goods-card-footer-num">x {{goods.rightsQuantity}}</view>
         </view>
       </wr-goods-card>
+      <!-- 售后状态和操作按钮 -->
       <view slot="more">
         <view class="status-desc">{{order.statusDesc}}</view>
         <wr-after-service-button-bar service="{{order}}" bindrefresh="onRefresh" />
@@ -48,7 +58,7 @@
       status="{{listLoading}}"
       bindretry="onReTryLoad"
     >
-      <!-- 空态 -->
+      <!-- 空态提示 -->
       <view slot="empty" class="empty-wrapper">
         <t-empty size="240rpx" textColor="#999999" textSize="28rpx" src="{{emptyImg}}">
           暂无退款或售后申请记录
@@ -58,4 +68,6 @@
   </t-pull-down-refresh>
 </view>
 <t-toast id="t-toast" />
+<!-- 全局提示组件 -->
 <t-dialog id="t-dialog" />
+<!-- 全局对话框组件 -->

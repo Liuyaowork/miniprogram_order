@@ -1,16 +1,24 @@
 <t-popup close-on-overlay-click="{{true}}" visible="{{show}}" placement="bottom">
+  <!-- 弹窗组件，点击遮罩层关闭，显示在底部 -->
   <view class="specs-popup">
+    <!-- 规格弹窗内容容器 -->
     <view>
+      <!-- 商品卡片，展示商品信息 -->
       <goods-card data="{{goodsWithoutAttrValue}}" layout="horizontal-wrap" thumb-mode="{{thumbMode}}" />
       <view class="section">
+        <!-- 已选规格标题 -->
         <view class="title">已选规格</view>
         <view class="options">
+          <!-- 遍历并显示商品的规格属性 -->
           <view wx:for="{{goods.sku.attr_value}}" wx:for-item="spec" wx:key="spec" class="option">
             {{spec.value}}
           </view>
         </view>
       </view>
     </view>
-    <view class="bottom-btn" hover-class="bottom-btn--active" bindtap="onClose">我知道了</view>
+    <view class="bottom-btn" hover-class="bottom-btn--active" bindtap="onClose">
+      <!-- 底部按钮，点击关闭弹窗 -->
+      我知道了
+    </view>
   </view>
 </t-popup>

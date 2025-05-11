@@ -1,26 +1,51 @@
 <t-pull-down-refresh id="t-pull-down-refresh" bindrefresh="onPullDownRefresh_" t-class-indicator="t-class-indicator">
-  <!-- 页面内容 -->
+  <!-- 下拉刷新组件 -->
   <view class="order-detail">
+    <!-- 订单详情主容器 -->
     <view class="header">
+      <!-- 订单状态 -->
       <view class="order-detail__header">
         <view class="title">{{order.statusDesc}}</view>
       </view>
       <!-- 收货地址 -->
       <view class="order-logistics">
         <t-icon name="location" size="40rpx" class="logistics-icon" prefix="wr" />
+        <!-- 地址图标 -->
         <view class="logistics-content">
           <view>{{order.delivery_info.name + ' '}}{{order.delivery_info.phone}}</view>
+          <!-- 收货人信息 -->
           <view class="logistics-time">{{order.delivery_info.address}}</view>
+          <!-- 收货地址 -->
         </view>
         <view wx:if="{{addressEditable}}" class="edit-text" bindtap="onEditAddressTap">修改</view>
+        <!-- 修改地址按钮 -->
       </view>
     </view>
     <!-- 店铺及商品 -->
     <order-card order="{{order}}" use-top-right-slot>
-      <order-goods-card wx:for="{{order.orderItems}}" wx:key="id" wx:for-item="goods" wx:for-index="gIndex" goods="{{goods}}" no-top-line="{{gIndex === 0}}" bindtap="onGoodsCardTap" data-index="{{gIndex}}">
-        <order-button-bar slot="append-card" class="goods-button-bar" order="{{_order}}" bindrefresh="onRefresh" goodsIndex="{{gIndex}}" />
+      <!-- 订单卡片 -->
+      <order-goods-card 
+        wx:for="{{order.orderItems}}" 
+        wx:key="id" 
+        wx:for-item="goods" 
+        wx:for-index="gIndex" 
+        goods="{{goods}}" 
+        no-top-line="{{gIndex === 0}}" 
+        bindtap="onGoodsCardTap" 
+        data-index="{{gIndex}}"
+      >
+        <!-- 商品卡片 -->
+        <order-button-bar 
+          slot="append-card" 
+          class="goods-button-bar" 
+          order="{{_order}}" 
+          bindrefresh="onRefresh" 
+          goodsIndex="{{gIndex}}" 
+        />
+        <!-- 商品操作按钮栏 -->
       </order-goods-card>
       <view class="pay-detail">
+        <!-- 支付详情 -->
         <view class="pay-item">
           <text>商品总额</text>
           <price fill decimalSmaller wr-class="pay-item__right font-bold" price="{{order.totalPrice * 100 || '0'}}" />
@@ -32,29 +57,38 @@
       </view>
     </order-card>
     <view class="pay-detail padding-inline">
+      <!-- 订单信息 -->
       <view class="pay-item">
         <text>订单编号</text>
         <view class="pay-item__right" bindtap="onOrderNumCopy">
           <text class="order-no">{{order._id}}</text>
+          <!-- 订单编号 -->
           <view class="pay-item__right__copy">复制</view>
+          <!-- 复制按钮 -->
         </view>
       </view>
       <view class="pay-item">
         <text>下单时间</text>
         <view class="pay-item__right">
           <text class="order-no normal-color">{{order.createdTimeString}}</text>
+          <!-- 下单时间 -->
         </view>
       </view>
       <view class="border-bottom border-bottom-margin" />
+      <!-- 分割线 -->
       <view class="pay-service" wx:if="{{storeDetail && storeDetail.storeTel}}" catch:tap="clickService">
+        <!-- 联系客服 -->
         <t-icon name="service" size="40rpx" />
         <text decode="{{true}}">&nbsp;联系客服</text>
       </view>
     </view>
   </view>
   <view class="bottom-bar">
+    <!-- 底部操作按钮栏 -->
     <order-button-bar bindoperation="onOperation" order="{{order}}" isBtnMax />
   </view>
 </t-pull-down-refresh>
 <t-toast id="t-toast" />
+<!-- 全局提示组件 -->
 <t-dialog id="t-dialog" />
+<!-- 全局对话框组件 -->

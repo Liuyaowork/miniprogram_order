@@ -1,5 +1,7 @@
 <view class="btn-bar">
+  <!-- 按钮栏容器 -->
   <view class="left">
+    <!-- 左侧按钮 -->
     <t-button
       wx:for="{{buttons.left}}"
       wx:key="type"
@@ -12,9 +14,11 @@
       data-type="{{leftBtn.type}}"
     >
       {{leftBtn.name}}
+      <!-- 左侧按钮名称 -->
     </t-button>
   </view>
   <view class="right">
+    <!-- 右侧按钮 -->
     <t-button
       wx:for="{{buttons.right}}"
       wx:key="type"
@@ -30,8 +34,11 @@
       data-share="{{ rightBtn.dataShare }}"
     >
       {{rightBtn.name}}
+      <!-- 右侧按钮名称 -->
     </t-button>
   </view>
 </view>
 <t-toast id="t-toast" />
+<!-- 全局提示组件 -->
 <t-dialog id="t-dialog" />
+<!-- 全局对话框组件 -->

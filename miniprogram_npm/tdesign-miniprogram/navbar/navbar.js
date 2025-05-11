@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { SuperComponent, wxComponent } from '../common/src/index';
-import { getRect } from '../common/utils';
+import { getRect, systemInfo } from '../common/utils';
 import config from '../common/config';
 import props from './props';
 const { prefix } = config;
@@ -119,29 +119,22 @@ let Navbar = class Navbar extends SuperComponent {
         if (wx.getMenuButtonBoundingClientRect) {
             rect = wx.getMenuButtonBoundingClientRect();
         }
-        if (!rect)
+        if (!rect || !systemInfo)
             return;
-        wx.getSystemInfo({
-            success: (res) => {
-                const boxStyleList = [];
-                boxStyleList.push(`--td-navbar-padding-top: ${res.statusBarHeight}px`);
-                if (rect && (res === null || res === void 0 ? void 0 : res.windowWidth)) {
-                    boxStyleList.push(`--td-navbar-right: ${res.windowWidth - rect.left}px`);
-                }
-                boxStyleList.push(`--td-navbar-capsule-height: ${rect.height}px`);
-                boxStyleList.push(`--td-navbar-capsule-width: ${rect.width}px`);
-                boxStyleList.push(`--td-navbar-height: ${(rect.top - res.statusBarHeight) * 2 + rect.height}px`);
-                this.setData({
-                    boxStyle: `${boxStyleList.join('; ')}`,
-                });
-                if (wx.onMenuButtonBoundingClientRectWeightChange) {
-                    wx.onMenuButtonBoundingClientRectWeightChange((res) => this.queryElements(res));
-                }
-            },
-            fail: (err) => {
-                console.error('navbar 获取系统信息失败', err);
-            },
+        const boxStyleList = [];
+        boxStyleList.push(`--td-navbar-padding-top: ${systemInfo.statusBarHeight}px`);
+        if (rect && (systemInfo === null || systemInfo === void 0 ? void 0 : systemInfo.windowWidth)) {
+            boxStyleList.push(`--td-navbar-right: ${systemInfo.windowWidth - rect.left}px`);
+        }
+        boxStyleList.push(`--td-navbar-capsule-height: ${rect.height}px`);
+        boxStyleList.push(`--td-navbar-capsule-width: ${rect.width}px`);
+        boxStyleList.push(`--td-navbar-height: ${(rect.top - systemInfo.statusBarHeight) * 2 + rect.height}px`);
+        this.setData({
+            boxStyle: `${boxStyleList.join('; ')}`,
         });
+        if (wx.onMenuButtonBoundingClientRectWeightChange) {
+            wx.onMenuButtonBoundingClientRectWeightChange((res) => this.queryElements(res));
+        }
     }
     detached() {
         if (wx.offMenuButtonBoundingClientRectWeightChange) {

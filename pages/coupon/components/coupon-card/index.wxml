@@ -9,7 +9,9 @@
   status="{{couponDTO.status || ''}}"
   bind:tap="gotoDetail"
 >
+  <!-- 优惠券卡片组件，绑定点击事件跳转到详情 -->
   <view slot="operator" class="coupon-btn-slot">
+    <!-- 操作按钮插槽 -->
     <t-button
       t-class="coupon-btn-{{btnTheme}}"
       theme="{{btnTheme}}"
@@ -18,6 +20,7 @@
       size="extra-small"
       bind:tap="gotoGoodsList"
       >{{btnText}}
+      <!-- 按钮文字，点击跳转到商品列表 -->
     </t-button>
   </view>
 </ui-coupon-card>

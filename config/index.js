@@ -7,7 +7,7 @@ export const config = {
 /** 云开发使用 */
 export const cloudbaseTemplateConfig = {
   /** 是否使用 mock 数据代替 API 返回数据 */
-  useMock: true,
+  useMock: false,
 };
 
 /** 静态资源的 CDN 基础路径 */

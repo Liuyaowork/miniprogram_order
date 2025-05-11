@@ -1,35 +1,78 @@
 <wxs src="./index.wxs" module="handlePromotion" />
+<!-- 引入处理促销逻辑的 WXS 模块 -->
+
 <wxs src="./utils.wxs" module="utils" />
+<!-- 引入工具函数的 WXS 模块 -->
+
 <view class="cart-group">
+  <!-- 购物车分组容器 -->
   <view class="goods-wrap">
+    <!-- 商品列表容器 -->
     <block wx:if="{{cartItems.length>0}}">
+      <!-- 如果购物车中有商品 -->
       <view class="goods-item" wx:for="{{cartItems}}" wx:for-item="goods" wx:for-index="gi" wx:key="_id">
+        <!-- 遍历购物车商品 -->
         <swipeout right-width="{{ 72 }}">
+          <!-- 支持滑动删除的商品项 -->
           <view class="goods-item-info">
+            <!-- 商品信息区域 -->
             <view class="check-wrap" catchtap="selectGoods" data-goods="{{goods}}">
-              <t-icon size="40rpx" color="{{goods.selected ? '#FA4126' : '#BBBBBB'}}" name="{{goods.selected ? 'check-circle-filled' : 'circle'}}" class="check" />
+              <!-- 商品选择按钮 -->
+              <t-icon 
+                size="40rpx" 
+                color="{{goods.selected ? '#FA4126' : '#BBBBBB'}}" 
+                name="{{goods.selected ? 'check-circle-filled' : 'circle'}}" 
+                class="check" />
+              <!-- 根据商品是否被选中动态设置图标和颜色 -->
             </view>
             <view class="goods-sku-info">
-              <goods-card layout="horizontal-wrap" thumb-width="{{thumbWidth}}" thumb-height="{{thumbHeight}}" centered="{{true}}" data="{{goods}}" data-goods="{{goods}}" catchspecs="specsTap" catchclick="goGoodsDetail">
+              <!-- 商品 SKU 信息 -->
+              <goods-card 
+                layout="horizontal-wrap" 
+                thumb-width="{{thumbWidth}}" 
+                thumb-height="{{thumbHeight}}" 
+                centered="{{true}}" 
+                data="{{goods}}" 
+                data-goods="{{goods}}" 
+                catchspecs="specsTap" 
+                catchclick="goGoodsDetail">
+                <!-- 商品卡片组件 -->
                 <view slot="thumb-cover" class="stock-mask" wx:if="{{goods.sku.count <= 3}}">
+                  <!-- 库存提示 -->
                   仅剩{{goods.sku.count}}件
                 </view>
                 <view slot="append-body" class="goods-stepper">
-                  <t-stepper classname="stepper-info" value="{{goods.count}}" min="{{1}}" max="{{goods.sku.count}}" data-goods="{{goods}}" data-gi="{{gi}}" catchchange="changeStepper" catchblur="input" catchoverlimit="overlimit" theme="filled" />
+                  <!-- 商品数量步进器 -->
+                  <t-stepper 
+                    classname="stepper-info" 
+                    value="{{goods.count}}" 
+                    min="{{1}}" 
+                    max="{{goods.sku.count}}" 
+                    data-goods="{{goods}}" 
+                    data-gi="{{gi}}" 
+                    catchchange="changeStepper" 
+                    catchblur="input" 
+                    catchoverlimit="overlimit" 
+                    theme="filled" />
                 </view>
               </goods-card>
             </view>
           </view>
           <view slot="right" class="swiper-right-del" bindtap="deleteGoods" data-goods="{{goods}}">
+            <!-- 滑动删除按钮 -->
             删除
           </view>
         </swipeout>
       </view>
       <view class="promotion-line-wrap" wx:if="{{handlePromotion.hasPromotion(promotion.promotionCode) && promoindex != (store.promotionGoodsList.length - 2)}}">
+        <!-- 促销分割线 -->
         <view class="promotion-line" />
       </view>
     </block>
   </view>
 </view>
 <specs-popup wx:if="{{currentGoods}}" goods="{{currentGoods}}" show="{{isShowSpecs}}" bindclose="hideSpecsPopup" />
+<!-- 商品规格弹窗 -->
+
 <t-toast id="t-toast" />
+<!-- 全局提示组件 -->

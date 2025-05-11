@@ -28,13 +28,21 @@
  bind:click="onClick"
  hidden="{{hiddenInData}}"
 >
-	<!-- 透传good-card组件的slot -->
+	<!-- 商品卡片组件 -->
+	<!-- 透传 goods-card 组件的 slot -->
 	<slot name="thumb-cover" slot="thumb-cover" />
+	<!-- 缩略图覆盖内容插槽 -->
 	<slot name="after-title" slot="after-title" />
+	<!-- 标题后插槽 -->
 	<slot name="after-desc" slot="after-desc" />
+	<!-- 描述后插槽 -->
 	<slot name="price-prefix" slot="price-prefix" />
+	<!-- 价格前缀插槽 -->
 	<slot name="append-body" slot="append-body" />
+	<!-- 商品信息追加内容插槽 -->
 	<slot name="footer" slot="footer" />
+	<!-- 底部插槽 -->
 	<slot name="append-card" slot="append-card" />
+	<!-- 卡片追加内容插槽 -->
 </goods-card>
 

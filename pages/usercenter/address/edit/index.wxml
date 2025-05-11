@@ -1,25 +1,65 @@
 <view class="address-detail">
+  <!-- 地址编辑页面主容器 -->
   <view class="divider-line" />
+  <!-- 分割线 -->
   <view class="form-address">
+    <!-- 地址表单容器 -->
     <form class="form-content">
+      <!-- 表单内容 -->
       <t-cell-group>
+        <!-- 收货人输入 -->
         <t-cell class="form-cell" t-class-title="t-cell-title" title="收货人" t-class-note="t-cell-note">
-          <t-input class="t-input" slot="note" t-class="field-text" borderless data-item="name" maxlength="20" type="text" value="{{name}}" placeholder="您的姓名" bind:change="onInputValue" />
+          <t-input 
+            class="t-input" 
+            slot="note" 
+            t-class="field-text" 
+            borderless 
+            data-item="name" 
+            maxlength="20" 
+            type="text" 
+            value="{{name}}" 
+            placeholder="您的姓名" 
+            bind:change="onInputValue" 
+          />
         </t-cell>
+        <!-- 手机号输入 -->
         <t-cell class="form-cell" t-class-title="t-cell-title" title="手机号">
-          <t-input slot="note" class="t-input" t-class="field-text" borderless type="number" value="{{phone}}" maxlength="11" placeholder="联系您的手机号" bind:change="onInputValue" data-item="phone" />
+          <t-input 
+            slot="note" 
+            class="t-input" 
+            t-class="field-text" 
+            borderless 
+            type="number" 
+            value="{{phone}}" 
+            maxlength="11" 
+            placeholder="联系您的手机号" 
+            bind:change="onInputValue" 
+            data-item="phone" 
+          />
         </t-cell>
+        <!-- 详细地址输入 -->
         <t-cell class="form-cell" t-class-title="t-cell-title" title="详细地址" bordered="{{false}}">
           <view slot="note" class="textarea__wrapper">
-            <t-textarea slot="note" type="text" value="{{detailAddress}}" placeholder="精确到门牌号" autosize bind:change="onInputValue" data-item="detailAddress" />
+            <t-textarea 
+              slot="note" 
+              type="text" 
+              value="{{detailAddress}}" 
+              placeholder="精确到门牌号" 
+              autosize 
+              bind:change="onInputValue" 
+              data-item="detailAddress" 
+            />
           </view>
         </t-cell>
       </t-cell-group>
       <view class="submit">
+        <!-- 保存按钮 -->
         <t-button shape="round" block bind:tap="formSubmit">保存</t-button>
       </view>
     </form>
   </view>
 </view>
 <t-toast id="t-toast" />
+<!-- 全局提示组件 -->
 <loading-dialog show="{{loading}}" />
+<!-- 加载对话框组件 -->

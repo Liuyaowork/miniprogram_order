@@ -4,8 +4,10 @@ var __DEFINE__ = function(modId, func, req) { var m = { exports: {}, _tempexport
 var __REQUIRE__ = function(modId, source) { if(!__MODS__[modId]) return require(source); if(!__MODS__[modId].status) { var m = __MODS__[modId].m; m._exports = m._tempexports; var desp = Object.getOwnPropertyDescriptor(m, "exports"); if (desp && desp.configurable) Object.defineProperty(m, "exports", { set: function (val) { if(typeof val === "object" && val !== m._exports) { m._exports.__proto__ = val.__proto__; Object.keys(val).forEach(function (k) { m._exports[k] = val[k]; }); } m._tempexports = val }, get: function () { return m._tempexports; } }); __MODS__[modId].status = 1; __MODS__[modId].func(__MODS__[modId].req, m, m.exports); } return __MODS__[modId].m.exports; };
 var __REQUIRE_WILDCARD__ = function(obj) { if(obj && obj.__esModule) { return obj; } else { var newObj = {}; if(obj != null) { for(var k in obj) { if (Object.prototype.hasOwnProperty.call(obj, k)) newObj[k] = obj[k]; } } newObj.default = obj; return newObj; } };
 var __REQUIRE_DEFAULT__ = function(obj) { return obj && obj.__esModule ? obj.default : obj; };
-__DEFINE__(1727109350336, function(require, module, exports) {
+__DEFINE__(1746932622261, function(require, module, exports) {
 
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -87,9 +89,6 @@ function __generator(thisArg, body) {
     }
 }
 
-/**
- * 自定义错误类，用于处理 WxCloud SDK 错误
- */
 var WxCloudSDKError = /** @class */ (function (_super) {
     __extends(WxCloudSDKError, _super);
     function WxCloudSDKError(message, extra) {
@@ -104,7 +103,8 @@ var WxCloudSDKError = /** @class */ (function (_super) {
 }(Error));
 
 /**
- * 获取全局对象（如 window 或 globalThis）
+ * 获取全局对象 window
+ *  小程序中可用, 但小程序中对象信息残缺, 无法访问 navigator 对象, ua 信息也无意义
  */
 function getGlobalObj() {
     // @ts-ignore
@@ -152,13 +152,8 @@ function getUserAgent() {
         return ua_1;
     }
 }
-var VERSION = "1.2.1";
+var VERSION = "1.5.0";
 
-/**
- * 调用数据源的方法
- * @param {Object} _a 参数对象
- * @returns {Promise<Object>} 返回调用结果
- */
 var callDataSource = function (_a) {
     var dataSourceName = _a.dataSourceName, methodName = _a.methodName, params = _a.params, realMethodName = _a.realMethodName, callFunction = _a.callFunction, _b = _a.envType, envType = _b === void 0 ? 'prod' : _b, mode = _a.mode;
     return __awaiter(void 0, void 0, void 0, function () {
@@ -221,12 +216,6 @@ var callDataSource = function (_a) {
         });
     });
 };
-
-/**
- * 执行 MySQL 命令
- * @param {Object} _a 参数对象
- * @returns {Promise<Object>} 返回执行结果
- */
 var runMysqlCommand = function (_a) {
     var sql = _a.sql, params = _a.params, config = _a.config, callFunction = _a.callFunction, _b = _a.unsafe, unsafe = _b === void 0 ? false : _b;
     return __awaiter(void 0, void 0, void 0, function () {
@@ -285,6 +274,45 @@ var runMysqlCommand = function (_a) {
     });
 };
 
+var createRawQueryClient = function (callFunction) { return ({
+    $runSQL: function (sql, params, config) {
+        return __awaiter(this, void 0, void 0, function () {
+            var res;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, runMysqlCommand({
+                            sql: sql,
+                            params: params,
+                            config: __assign(__assign({}, config), { preparedStatements: true }),
+                            callFunction: callFunction
+                        })];
+                    case 1:
+                        res = _a.sent();
+                        return [2 /*return*/, res];
+                }
+            });
+        });
+    },
+    $runSQLRaw: function (sql, config) {
+        return __awaiter(this, void 0, void 0, function () {
+            var res;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, runMysqlCommand({
+                            sql: sql,
+                            params: [],
+                            config: __assign(__assign({}, config), { preparedStatements: false }),
+                            callFunction: callFunction
+                        })];
+                    case 1:
+                        res = _a.sent();
+                        return [2 /*return*/, res];
+                }
+            });
+        });
+    }
+}); };
+
 var CRUD_METHODS = {
     create: {
         methodName: 'wedaCreateV2'
@@ -330,13 +358,6 @@ var CRUD_METHODS = {
         }
     }
 };
-
-/**
- * 根据数据源名称生成客户端
- * @param {string} dataSourceName 数据源名称
- * @param {Function} callFunction 调用函数
- * @returns {Object} 返回生成的客户端
- */
 var generateClientByDataSourceName = function (dataSourceName, callFunction) {
     var client = new Proxy({}, {
         get: function (target, methodName) {
@@ -377,55 +398,13 @@ var generateClientByDataSourceName = function (dataSourceName, callFunction) {
     });
     return client;
 };
-
-/**
- * 生成动态客户端
- * @param {Function} callFunction 调用函数
- * @returns {Object} 返回生成的客户端
- */
+// 使用 TypeScript 的 Proxy 来定义一个动态的客户端
 var generateClient = function (callFunction) {
-    var rawQueryClient = {
-        $runSQL: function (sql, params, config) {
-            return __awaiter(this, void 0, void 0, function () {
-                var res;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, runMysqlCommand({
-                                sql: sql,
-                                params: params,
-                                config: __assign(__assign({}, config), { preparedStatements: true }),
-                                callFunction: callFunction
-                            })];
-                        case 1:
-                            res = _a.sent();
-                            return [2 /*return*/, res];
-                    }
-                });
-            });
-        },
-        $runSQLRaw: function (sql, config) {
-            return __awaiter(void 0, void 0, void 0, function () {
-                var res;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, runMysqlCommand({
-                                sql: sql,
-                                params: [],
-                                config: __assign(__assign({}, config), { preparedStatements: false }),
-                                callFunction: callFunction
-                            })];
-                        case 1:
-                            res = _a.sent();
-                            return [2 /*return*/, res];
-                    }
-                });
-            });
-        }
-    };
+    var rawQueryClient = createRawQueryClient(callFunction);
     return new Proxy({}, {
         get: function (target, prop) {
             if (typeof prop === 'string') {
-                if (rawQueryClient.hasOwnProperty(prop)) {
+                if (Object.prototype.hasOwnProperty.call(rawQueryClient, prop)) {
                     return rawQueryClient[prop];
                 }
                 // 返回一个函数，这个函数接受任意参数并返回一个 Promise
@@ -435,11 +414,190 @@ var generateClient = function (callFunction) {
     });
 };
 
-/**
- * 初始化云开发客户端
- * @param {Object} cloud 云开发对象
- * @returns {Object} 返回初始化后的云开发对象
- */
+var READ_DEFAULT_PARAMS = {
+    filter: {
+        where: {}
+    },
+    select: {
+        $master: true
+    }
+};
+function createDefaultMethod(methodName) {
+    return {
+        getUrl: function (modelName) { return "".concat(modelName, "/").concat(methodName); },
+        method: 'post'
+    };
+}
+var HTTP_DATA_MODEL_METHODS = {
+    get: __assign(__assign({}, createDefaultMethod('get')), { defaultParams: __assign({}, READ_DEFAULT_PARAMS) }),
+    list: __assign(__assign({}, createDefaultMethod('list')), { defaultParams: __assign({}, READ_DEFAULT_PARAMS) }),
+    create: createDefaultMethod('create'),
+    createMany: createDefaultMethod('createMany'),
+    update: __assign(__assign({}, createDefaultMethod('update')), { method: 'put' }),
+    updateMany: __assign(__assign({}, createDefaultMethod('updateMany')), { method: 'put' }),
+    upsert: createDefaultMethod('upsert'),
+    "delete": createDefaultMethod('delete'),
+    deleteMany: createDefaultMethod('deleteMany')
+};
+var UNKNOWN_ERROR_MESSAGE = 'Unknown error occurred';
+var NOT_SUPPORTED_CODE = 'NotSupported';
+var generateHTTPClient = function (callFunction, fetch, baseUrl, options) {
+    var rawQueryClient = createRawQueryClient(callFunction);
+    return new Proxy({}, {
+        get: function (_, modelName) {
+            if (typeof modelName !== 'string')
+                return undefined;
+            if (Object.prototype.hasOwnProperty.call(rawQueryClient, modelName)) {
+                return rawQueryClient[modelName];
+            }
+            return generateHTTPClientByDataSourceName(baseUrl, modelName, fetch, options);
+        }
+    });
+};
+var createWxCloudSDKError = function (message, modelName, methodName, code, requestId) {
+    return new WxCloudSDKError("\u3010\u9519\u8BEF\u3011".concat(message, "\n\u3010\u64CD\u4F5C\u3011\u8C03\u7528 models.").concat(modelName, ".").concat(methodName, "\n\u3010\u9519\u8BEF\u7801\u3011").concat(code, "\n\u3010\u8BF7\u6C42ID\u3011").concat(requestId), {
+        code: code,
+        requestId: requestId
+    });
+};
+var generateHTTPClientByDataSourceName = function (baseUrl, modelName, fetch, options) {
+    var client = new Proxy({}, {
+        get: function (_, methodName) {
+            if (methodName !== 'runSQLTemplate') {
+                var httpDataModelMethod_1 = HTTP_DATA_MODEL_METHODS[methodName];
+                if (!httpDataModelMethod_1) {
+                    var error = new Error("\u4E0D\u652F\u6301\u7684\u64CD\u4F5C: ".concat(methodName));
+                    throw new WxCloudSDKError(error.message || UNKNOWN_ERROR_MESSAGE, {
+                        originError: error,
+                        code: NOT_SUPPORTED_CODE,
+                        requestId: 'N/A'
+                    });
+                }
+                return function (params) {
+                    if (params === void 0) { params = {}; }
+                    return __awaiter(void 0, void 0, void 0, function () {
+                        var getUrl, method, _a, defaultParams, effectiveParams, envType, url, result, error_1;
+                        var _b;
+                        return __generator(this, function (_c) {
+                            switch (_c.label) {
+                                case 0:
+                                    getUrl = httpDataModelMethod_1.getUrl, method = httpDataModelMethod_1.method, _a = httpDataModelMethod_1.defaultParams, defaultParams = _a === void 0 ? {} : _a;
+                                    effectiveParams = Object.assign({}, defaultParams, params);
+                                    envType = effectiveParams.envType === 'pre' ? 'pre' : 'prod';
+                                    url = [baseUrl, envType, getUrl(modelName)].join('/');
+                                    _c.label = 1;
+                                case 1:
+                                    _c.trys.push([1, 3, , 4]);
+                                    return [4 /*yield*/, fetch({
+                                            url: url,
+                                            body: JSON.stringify(effectiveParams),
+                                            method: method
+                                        })];
+                                case 2:
+                                    result = _c.sent();
+                                    if (result.code) {
+                                        // 抛出错误
+                                        throw createWxCloudSDKError(result === null || result === void 0 ? void 0 : result.message, modelName, methodName, result === null || result === void 0 ? void 0 : result.code, result === null || result === void 0 ? void 0 : result.requestId);
+                                    }
+                                    if (methodName === 'get') {
+                                        // 和 callFunction 实现保持一致
+                                        Object.assign(result, { data: (_b = result.data.record) !== null && _b !== void 0 ? _b : result.data });
+                                    }
+                                    return [2 /*return*/, result];
+                                case 3:
+                                    error_1 = _c.sent();
+                                    throw new WxCloudSDKError((error_1 === null || error_1 === void 0 ? void 0 : error_1.message) || UNKNOWN_ERROR_MESSAGE, {
+                                        originError: error_1
+                                    });
+                                case 4: return [2 /*return*/];
+                            }
+                        });
+                    });
+                };
+            }
+            else {
+                if (!(options === null || options === void 0 ? void 0 : options.sqlBaseUrl)) {
+                    var error = new Error("\u4E0D\u652F\u6301\u7684\u64CD\u4F5C: ".concat(methodName));
+                    throw new WxCloudSDKError(error.message || UNKNOWN_ERROR_MESSAGE, {
+                        originError: error,
+                        code: NOT_SUPPORTED_CODE,
+                        requestId: 'N/A'
+                    });
+                }
+                return function (props) { return __awaiter(void 0, void 0, void 0, function () {
+                    var params, templateName, _envType, envType, url, parameter, result, error_2;
+                    var _a, _b, _c, _d, _e, _f, _g, _h;
+                    return __generator(this, function (_j) {
+                        switch (_j.label) {
+                            case 0:
+                                params = props.params, templateName = props.templateName, _envType = props.envType;
+                                envType = _envType === 'pre' ? 'pre' : 'prod';
+                                url = [options.sqlBaseUrl, envType, templateName, 'run'].join('/');
+                                parameter = Object.entries(params || {}).reduce(function (list, _a) {
+                                    var key = _a[0], value = _a[1];
+                                    if (value !== undefined) {
+                                        var type = "OBJECT" /* EQUERY_PARAM_TYPE.OBJECT */;
+                                        var typeofValue = typeof value;
+                                        switch (typeofValue) {
+                                            case 'boolean': {
+                                                type = "BOOLEAN" /* EQUERY_PARAM_TYPE.BOOLEAN */;
+                                                break;
+                                            }
+                                            case 'number': {
+                                                type = "NUMBER" /* EQUERY_PARAM_TYPE.NUMBER */;
+                                                break;
+                                            }
+                                            case 'string': {
+                                                type = "STRING" /* EQUERY_PARAM_TYPE.STRING */;
+                                                break;
+                                            }
+                                            default: {
+                                                if (Array.isArray(value)) {
+                                                    type = "ARRAY" /* EQUERY_PARAM_TYPE.ARRAY */;
+                                                }
+                                                else {
+                                                    type = "OBJECT" /* EQUERY_PARAM_TYPE.OBJECT */;
+                                                }
+                                            }
+                                        }
+                                        list.push({
+                                            key: key,
+                                            type: type,
+                                            value: type === "STRING" /* EQUERY_PARAM_TYPE.STRING */ ? value : JSON.stringify(value)
+                                        });
+                                    }
+                                    return list;
+                                }, []);
+                                _j.label = 1;
+                            case 1:
+                                _j.trys.push([1, 3, , 4]);
+                                return [4 /*yield*/, fetch({
+                                        url: url,
+                                        body: JSON.stringify({ parameter: parameter }),
+                                        method: 'POST'
+                                    })];
+                            case 2:
+                                result = _j.sent();
+                                if ((_a = result === null || result === void 0 ? void 0 : result.Response) === null || _a === void 0 ? void 0 : _a.Error) {
+                                    // 抛出错误
+                                    throw createWxCloudSDKError((_c = (_b = result === null || result === void 0 ? void 0 : result.Response) === null || _b === void 0 ? void 0 : _b.Error) === null || _c === void 0 ? void 0 : _c.Message, modelName, methodName, (_e = (_d = result === null || result === void 0 ? void 0 : result.Response) === null || _d === void 0 ? void 0 : _d.Error) === null || _e === void 0 ? void 0 : _e.Code, (_f = result === null || result === void 0 ? void 0 : result.Response) === null || _f === void 0 ? void 0 : _f.RequestId);
+                                }
+                                return [2 /*return*/, __assign(__assign({}, ((_g = result === null || result === void 0 ? void 0 : result.Response) !== null && _g !== void 0 ? _g : {})), { data: (_h = result === null || result === void 0 ? void 0 : result.Response) === null || _h === void 0 ? void 0 : _h.Data })];
+                            case 3:
+                                error_2 = _j.sent();
+                                throw new WxCloudSDKError((error_2 === null || error_2 === void 0 ? void 0 : error_2.message) || UNKNOWN_ERROR_MESSAGE, {
+                                    originError: error_2
+                                });
+                            case 4: return [2 /*return*/];
+                        }
+                    });
+                }); };
+            }
+        }
+    });
+    return client;
+};
+
 function init(cloud) {
     if (!cloud) {
         throw new Error('cloud is required');
@@ -447,15 +605,21 @@ function init(cloud) {
     if (!cloud.callFunction) {
         throw new Error('cloud.callFunction is required');
     }
-    var OrmClientImpl = generateClient(cloud.callFunction.bind(cloud));
-    cloud.models = OrmClientImpl; // 将生成的客户端挂载到 cloud 对象上
+    var ormClientImpl = generateClient(cloud.callFunction.bind(cloud));
+    cloud.models = ormClientImpl;
     return cloud;
 }
+var index = {
+    init: init,
+    generateHTTPClient: generateHTTPClient
+};
 
+exports.default = index;
+exports.generateHTTPClient = generateHTTPClient;
 exports.init = init;
 
 }, function(modId) {var map = {}; return __REQUIRE__(map[modId], modId); })
-return __REQUIRE__(1727109350336);
+return __REQUIRE__(1746932622261);
 })()
 //miniprogram-npm-outsideDeps=[]
 //# sourceMappingURL=index.js.map

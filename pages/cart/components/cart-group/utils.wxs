@@ -1,20 +1,29 @@
 module.exports.slice = function(arr) {
+  // 返回数组的前两个元素
   return arr.slice(0, 2);
 };
+
 module.exports.imgCut = function(url, width, height) {
+  // 检查 URL 是否为有效的 HTTP/HTTPS 或相对协议的链接
   if (url && (url.slice(0, 5) === 'http:' || url.slice(0, 6) === 'https:' || url.slice(0, 2) === '//')) {
+    // 构造图片裁剪参数
     var argsStr = 'imageMogr2/thumbnail/!' + width +  'x' + height + 'r';
     if (url.indexOf('?') > -1) {
+      // 如果 URL 已包含查询参数，则追加裁剪参数
       url = url + '&' + argsStr;
     } else {
+      // 如果 URL 不包含查询参数，则添加裁剪参数
       url = url + '?' + argsStr;
     }
     if (url.slice(0, 5) === 'http:') {
-      url = 'https://' + url.slice(5)
+      // 将 HTTP 协议转换为 HTTPS
+      url = 'https://' + url.slice(5);
     }
     if (url.slice(0, 2) === '//') {
-      url = 'https:' + url
+      // 为相对协议的链接添加 HTTPS
+      url = 'https:' + url;
     }
   }
+  // 返回处理后的 URL
   return url;
 };

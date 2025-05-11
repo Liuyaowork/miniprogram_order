@@ -1,25 +1,35 @@
 <wxs module="utils">
+	// 工具模块，用于隐藏手机号中间四位
 	var hidePhoneNum = function(array) {
-	if (!array) return;
-	var mphone = array.substring(0, 3) + '****' + array.substring(7);
-	return mphone;
+		if (!array) return;
+		var mphone = array.substring(0, 3) + '****' + array.substring(7);
+		return mphone;
 	}
 	module.exports = {
-	hidePhoneNum:hidePhoneNum
+		hidePhoneNum: hidePhoneNum
 	}
 </wxs>
+
 <view class="address-card wr-class">
+  <!-- 地址卡片主容器 -->
   <t-cell wx:if="{{addressData && addressData.detailAddress}}" bindtap="onAddressTap" hover>
+    <!-- 如果有地址数据，显示地址详情 -->
     <view class="order-address" slot="title">
       <view class="address-content">
+        <!-- 地址详情 -->
         <view class="detail">{{addressData.detailAddress}}</view>
+        <!-- 收货人信息，隐藏手机号中间四位 -->
         <view class="info">{{addressData.name}} {{utils.hidePhoneNum(addressData.phone)}}</view>
       </view>
       <t-icon class="address__right" name="chevron-right" color="#BBBBBB" size="40rpx" />
+      <!-- 右箭头图标 -->
     </view>
   </t-cell>
   <t-cell wx:else bindtap="onAddTap" title="添加收货地址" hover>
+    <!-- 如果没有地址数据，显示添加地址按钮 -->
     <t-icon name="add-circle" slot="left-icon" size="40rpx" />
+    <!-- 添加地址图标 -->
   </t-cell>
   <view class="top-line" />
+  <!-- 顶部分割线 -->
 </view>

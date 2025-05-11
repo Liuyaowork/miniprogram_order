@@ -1,16 +1,13 @@
-// 获取徽标的显示值
 var getBadgeValue = function (props) {
   if (props.dot) {
-    return ''; // 如果是点状徽标，不显示值
+    return '';
   }
   if (isNaN(props.count) || isNaN(props.maxCount)) {
-    return props.count; // 如果 count 或 maxCount 不是数字，直接返回 count
+    return props.count;
   }
-  // 如果 count 超过 maxCount，显示 maxCount+
   return parseInt(props.count) > props.maxCount ? props.maxCount + '+' : props.count;
 };
 
-// 判断单位是否包含有效的 CSS 单位
 var hasUnit = function (unit) {
   return (
     unit.indexOf('px') > 0 ||
@@ -23,56 +20,49 @@ var hasUnit = function (unit) {
   );
 };
 
-// 获取徽标的样式字符串
 var getBadgeStyles = function (props) {
   var styleStr = '';
   if (props.color) {
-    styleStr += 'background:' + props.color + ';'; // 设置背景颜色
+    styleStr += 'background:' + props.color + ';';
   }
   if (props.offset[0]) {
-    // 设置水平偏移
     styleStr += 'left: calc(100% + ' + (hasUnit(props.offset[0].toString()) ? props.offset[0] : props.offset[0] + 'px') + ');';
   }
   if (props.offset[1]) {
-    // 设置垂直偏移
     styleStr += 'top:' + (hasUnit(props.offset[1].toString()) ? props.offset[1] : props.offset[1] + 'px') + ';';
   }
   return styleStr;
 };
 
-// 获取徽标的外部类名
 var getBadgeOuterClass = function (props) {
   var baseClass = 't-badge';
   var classNames = [baseClass, props.shape === 'ribbon' ? baseClass + '__ribbon-outer' : ''];
-  return classNames.join(' '); // 返回拼接后的类名
+  return classNames.join(' ');
 };
 
-// 获取徽标的内部类名
 var getBadgeInnerClass = function (props) {
   var baseClass = 't-badge';
   var classNames = [
-    baseClass + '--basic', // 基础类名
-    props.dot ? baseClass + '--dot' : '', // 点状徽标类名
-    baseClass + '--' + props.size, // 尺寸类名
-    baseClass + '--' + props.shape, // 形状类名
-    !props.dot && props.count ? baseClass + '--count' : '', // 数字徽标类名
+    baseClass + '--basic',
+    props.dot ? baseClass + '--dot' : '',
+    baseClass + '--' + props.size,
+    baseClass + '--' + props.shape,
+    !props.dot && props.count ? baseClass + '--count' : '',
   ];
-  return classNames.join(' '); // 返回拼接后的类名
+  return classNames.join(' ');
 };
 
-// 判断是否显示徽标
 var isShowBadge = function (props) {
   if (props.dot) {
-    return true; // 点状徽标始终显示
+    return true;
   }
   if (!props.showZero && !isNaN(props.count) && parseInt(props.count) === 0) {
-    return false; // 如果不显示零值且 count 为 0，则不显示
+    return false;
   }
-  if (props.count == null) return false; // 如果 count 为空，则不显示
-  return true; // 其他情况显示徽标
+  if (props.count == null) return false;
+  return true;
 };
 
-// 导出方法
 module.exports.getBadgeValue = getBadgeValue;
 module.exports.getBadgeStyles = getBadgeStyles;
 module.exports.getBadgeOuterClass = getBadgeOuterClass;

@@ -4,11 +4,15 @@
  bind:visible-change="onCancel"
  close-btn="{{showCloseButton}}"
 >
+	<!-- 弹窗组件，显示在底部 -->
 	<view class="popup-content">
+		<!-- 弹窗内容容器 -->
 		<view class="header">
+			<!-- 弹窗标题 -->
 			{{title}}
 		</view>
 		<view class="options">
+			<!-- 选项列表 -->
 			<t-cell
 			 wx:for="{{_options}}"
 			 wx:key="title"
@@ -19,6 +23,7 @@
 			 border="{{false}}"
 			>
 				<view slot="right-icon">
+					<!-- 选中状态图标 -->
 					<t-icon
 					 name="check-circle-filled"
 					 size="36rpx"
@@ -35,6 +40,7 @@
 			</t-cell>
 		</view>
 		<view class="button-bar" wx:if="{{showConfirmButton}}">
+			<!-- 确认按钮 -->
 			<t-button
 			 class="btnWrapper"
 			 wx:if="{{showConfirmButton}}"
@@ -47,4 +53,5 @@
 	</view>
 </t-popup>
 <t-toast id="t-toast" />
+<!-- 全局提示组件 -->
 

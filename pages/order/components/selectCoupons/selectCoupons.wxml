@@ -1,20 +1,28 @@
 <wxs src="./selectCoupon.wxs" module="m1" />
-
+<!-- 引入 WXS 模块 -->
 
 <t-popup visible="{{couponsShow}}" placement="bottom" bind:visible-change="hide">
+	<!-- 弹窗组件，显示在底部 -->
 	<view class="select-coupons">
+		<!-- 优惠券选择容器 -->
 		<view class="title">选择优惠券</view>
 		<block wx:if="{{couponsList && couponsList.length > 0}}">
+			<!-- 如果有可用优惠券 -->
 			<view class="info">
-				<block wx:if="{{!selectedNum}}">你有{{couponsList.length}}张可用优惠券</block>
+				<block wx:if="{{!selectedNum}}">
+					你有{{couponsList.length}}张可用优惠券
+				</block>
 				<block wx:else>
 					已选中{{selectedNum}}张推荐优惠券, 共抵扣
 					<wr-price fill="{{false}}" price="{{reduce || 0}}" />
+					<!-- 显示已选优惠券数量和抵扣金额 -->
 				</block>
 			</view>
 			<scroll-view class="coupons-list" scroll-y="true">
+				<!-- 优惠券列表滚动视图 -->
 				<view class="coupons-wrap">
 					<block wx:for="{{couponsList}}" wx:key="index" wx:for-item="coupon">
+						<!-- 遍历优惠券列表 -->
 						<coupon-card
 						 title="{{coupon.title}}"
 						 type="{{coupon.type}}"
@@ -24,20 +32,33 @@
 						 tag="{{coupon.tag}}"
 						 timeLimit="{{coupon.timeLimit}}"
 						>
+							<!-- 优惠券卡片 -->
 							<view class="slot-radio" slot="operator">
-                <t-icon bindtap="selectCoupon" data-key="{{coupon.key}}" name="{{coupon.isSelected ? 'check-circle-filled' : 'circle'}}" color="#fa4126" size="40rpx"/>
+								<!-- 选择按钮 -->
+								<t-icon 
+									bindtap="selectCoupon" 
+									data-key="{{coupon.key}}" 
+									name="{{coupon.isSelected ? 'check-circle-filled' : 'circle'}}" 
+									color="#fa4126" 
+									size="40rpx"
+								/>
 							</view>
 						</coupon-card>
-						<view class="disable" wx:if="{{coupon.status == 'useless'}}">此优惠券不能和已勾选的优惠券叠加使用</view>
+						<view class="disable" wx:if="{{coupon.status == 'useless'}}">
+							此优惠券不能和已勾选的优惠券叠加使用
+							<!-- 不可用优惠券提示 -->
+						</view>
 					</block>
 				</view>
 			</scroll-view>
 		</block>
 		<view wx:else class="couponp-empty-wrap">
+			<!-- 如果没有可用优惠券 -->
 			<t-image t-class="couponp-empty-img" src="{{emptyCouponImg}}" />
 			<view class="couponp-empty-title">暂无优惠券</view>
 		</view>
 		<view class="coupons-cover" />
+		<!-- 遮罩层 -->
 	</view>
 </t-popup>
 

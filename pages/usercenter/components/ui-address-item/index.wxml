@@ -1,29 +1,44 @@
 <wxs module="phoneReg">
-  var toHide = function(array) { var mphone = array.substring(0, 3) + '****' + array.substring(7); return mphone; }
+  // WXS 模块，用于隐藏手机号中间四位
+  var toHide = function(array) { 
+    var mphone = array.substring(0, 3) + '****' + array.substring(7); 
+    return mphone; 
+  }
   module.exports.toHide = toHide;
 </wxs>
+
 <view class="address-item-wrapper item-wrapper-class">
+  <!-- 地址项主容器 -->
   <t-swipe-cell class="swipe-out">
+    <!-- 可滑动删除的地址项 -->
     <view class="address {{isDrawLine ? 'draw-line' : ''}}" bindtap="onSelect" data-item="{{address}}">
+      <!-- 地址内容 -->
       <view class="address-left" wx:if="{{extraSpace}}">
+        <!-- 左侧选中图标 -->
         <t-icon wx:if="{{address.checked}}" name="check" color="#FA4126" class-prefix="{{classPrefix}}" size="46rpx" />
       </view>
       <view class="address-content">
+        <!-- 地址详情 -->
         <view class="title title-class">
+          <!-- 收货人姓名 -->
           <text class="text-style">{{address.name}}</text>
+          <!-- 隐藏中间四位的手机号 -->
           <text>{{phoneReg.toHide(address.phone || '')}}</text>
         </view>
         <view class="label-adds">
+          <!-- 地址信息 -->
           <text class="adds address-info-class">
             <text class="address-text">{{address.address}}</text>
           </text>
         </view>
       </view>
       <view catch:tap="onEdit" data-item="{{address}}" class="address-edit">
+        <!-- 编辑按钮 -->
         <t-icon name="{{customIcon}}" class-prefix="{{classPrefix}}" size="46rpx" color="#BBBBBB" />
       </view>
     </view>
     <view slot="right" class="swipe-right-del delete-class" bindtap="onDelete" data-item="{{address}}">
+      <!-- 删除按钮 -->
       删除
     </view>
   </t-swipe-cell>

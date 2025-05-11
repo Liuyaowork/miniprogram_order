@@ -1,14 +1,41 @@
 <view class="cart-bar__placeholder" wx:if="{{fixed}}" />
-<view class="cart-bar {{fixed ? 'cart-bar--fixed' : ''}} flex flex-v-center" style="bottom: {{fixed ? 'calc(' + bottomHeight + 'rpx + env(safe-area-inset-bottom))' : ''}};">
-  <t-icon size="40rpx" color="{{isAllSelected ? '#FA4126' : '#BBBBBB'}}" name="{{isAllSelected ? 'check-circle-filled' : 'circle'}}" class="cart-bar__check" catchtap="handleSelectAll" />
+<!-- 如果 fixed 为 true，则显示占位元素 -->
+
+<view 
+  class="cart-bar {{fixed ? 'cart-bar--fixed' : ''}} flex flex-v-center" 
+  style="bottom: {{fixed ? 'calc(' + bottomHeight + 'rpx + env(safe-area-inset-bottom))' : ''}};">
+  <!-- 主容器，根据 fixed 动态添加固定样式 -->
+  
+  <t-icon 
+    size="40rpx" 
+    color="{{isAllSelected ? '#FA4126' : '#BBBBBB'}}" 
+    name="{{isAllSelected ? 'check-circle-filled' : 'circle'}}" 
+    class="cart-bar__check" 
+    catchtap="handleSelectAll" />
+  <!-- 全选按钮，动态设置图标和颜色，绑定点击事件 handleSelectAll -->
+
   <text>全选</text>
+  <!-- 全选文字 -->
+
   <view class="cart-bar__total flex1">
+    <!-- 总计区域 -->
     <view>
       <text class="cart-bar__total--bold text-padding-right">总计</text>
-      <price price="{{totalAmount || '0'}}" fill="{{false}}" decimalSmaller class="cart-bar__total--bold cart-bar__total--price" />
+      <!-- 总计文字 -->
+      <price 
+        price="{{totalAmount || '0'}}" 
+        fill="{{false}}" 
+        decimalSmaller 
+        class="cart-bar__total--bold cart-bar__total--price" />
+      <!-- 显示总金额 -->
     </view>
   </view>
-  <view catchtap="handleToSettle" class="{{!isDisabled ? '' : 'disabled-btn'}} account-btn" hover-class="{{!isDisabled ? '' : 'hover-btn'}}">
+
+  <view 
+    catchtap="handleToSettle" 
+    class="{{!isDisabled ? '' : 'disabled-btn'}} account-btn" 
+    hover-class="{{!isDisabled ? '' : 'hover-btn'}}">
+    <!-- 结算按钮，动态设置禁用样式和点击事件 -->
     去结算({{totalGoodsNum}})
   </view>
 </view>

@@ -1,9 +1,12 @@
 <!-- 优惠券 -->
 <view class="coupon-card-wrap">
+  <!-- 优惠券卡片 -->
   <coupon-card couponDTO="{{detail}}" />
 </view>
+
 <!-- 说明 -->
 <view class="desc-wrap">
+  <!-- 描述信息分组 -->
   <t-cell-group t-class="desc-group-wrap">
     <t-cell
       wx:if="{{detail && detail.desc}}"
@@ -13,6 +16,7 @@
       title="规则说明"
       note="{{detail && detail.desc}}"
     />
+    <!-- 显示规则说明 -->
     <t-cell
       wx:if="{{detail && detail.timeLimit}}"
       t-class="t-class-cell"
@@ -21,6 +25,7 @@
       title="有效时间"
       note="{{detail && detail.timeLimit}}"
     />
+    <!-- 显示有效时间 -->
     <t-cell
       wx:if="{{detail && detail.storeAdapt}}"
       t-class="t-class-cell"
@@ -29,6 +34,7 @@
       title="适用范围"
       note="{{detail && detail.storeAdapt}}"
     />
+    <!-- 显示适用范围 -->
     <t-cell
       wx:if="{{detail && detail.useNotes}}"
       t-class="t-class-cell"
@@ -37,9 +43,14 @@
       title="使用须知"
       note="{{detail && detail.useNotes}}"
     />
+    <!-- 显示使用须知 -->
   </t-cell-group>
+
   <!-- 查看可用商品 -->
   <view class="button-wrap">
-    <t-button shape="round" block bindtap="navGoodListHandle"> 查看可用商品 </t-button>
+    <t-button shape="round" block bindtap="navGoodListHandle">
+      查看可用商品
+    </t-button>
+    <!-- 按钮点击事件跳转到可用商品列表 -->
   </view>
 </view>

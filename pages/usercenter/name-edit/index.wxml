@@ -1,4 +1,5 @@
 <view class="name-edit">
+  <!-- 昵称编辑页面主容器 -->
   <t-input
     borderless
     model:value="{{nameValue}}"
@@ -7,8 +8,11 @@
     clearable
     bind:clear="clearContent"
   />
+  <!-- 输入框组件，支持清空 -->
   <view class="name-edit__input--desc"> 最多可输入15个字 </view>
+  <!-- 输入框描述 -->
   <view class="name-edit__wrapper">
     <t-button block shape="round" disabled="{{!nameValue}}" bind:tap="onSubmit">保存</t-button>
+    <!-- 保存按钮，只有输入框有值时可用 -->
   </view>
 </view>

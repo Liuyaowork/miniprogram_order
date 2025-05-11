@@ -1,13 +1,19 @@
 <t-popup visible="{{show}}" placement="bottom" bind:visible-change="closePromotionPopup">
+	<!-- 弹窗组件，显示在底部 -->
 	<view class="promotion-popup-container">
+		<!-- 弹窗内容容器 -->
 		<view class="promotion-popup-close" bindtap="closePromotionPopup">
+			<!-- 关闭按钮 -->
 			<t-icon name="close" size="36rpx" />
 		</view>
 		<view class="promotion-popup-title">
+			<!-- 弹窗标题 -->
 			<view class="title">{{title}}</view>
 		</view>
 		<view class="promotion-popup-content">
+			<!-- 弹窗内容 -->
 			<view class="promotion-detail-list">
+				<!-- 促销详情列表 -->
 				<view
 				  class="list-item"
 				  wx:for="{{list}}"
@@ -15,8 +21,11 @@
 				  bindtap="change"
 				  data-index="{{index}}"
 				>
+					<!-- 列表项 -->
 					<view class="tag">{{item.tag}}</view>
+					<!-- 标签 -->
 					<view class="content">
+						<!-- 内容 -->
 						<text class="list-content">{{item.label ? item.label : ''}}</text>
 					</view>
 					<t-icon
@@ -25,10 +34,12 @@
 					  size="40rpx"
 					  color="#bbb"
 					/>
+					<!-- 右箭头图标 -->
 				</view>
 			</view>
 		</view>
 		<slot name="promotion-bottom" />
+		<!-- 底部插槽 -->
 	</view>
 </t-popup>
 

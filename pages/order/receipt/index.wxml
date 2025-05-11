@@ -1,5 +1,7 @@
 <view class="receipt">
+  <!-- 发票页面主容器 -->
   <view class="title">
+    <!-- 发票类型选择 -->
     <t-cell class="receipt-cell" title="发票" bordered="{{false}}" t-class-left="cell-left">
       <view slot="right-icon" class="btn-wrap">
         <view
@@ -16,7 +18,9 @@
     </t-cell>
   </view>
   <block wx:if="{{receiptIndex === 1}}">
+    <!-- 如果选择了发票 -->
     <t-cell class="receipt-cell" title="发票抬头" t-class-left="cell-left">
+      <!-- 发票抬头选择 -->
       <view class="btn-wrap" slot="right-icon">
         <view
           class="btn {{addressTagsIndex === index ? 'active-btn':'' }}"
@@ -36,6 +40,7 @@
       t-class-left="cell-left"
       t-class-right="cell-right"
     >
+      <!-- 姓名或公司名称输入 -->
       <t-input
         slot="right-icon"
         borderless
@@ -53,6 +58,7 @@
       t-class-left="cell-left"
       t-class-right="cell-right"
     >
+      <!-- 手机号或纳税人识别号输入 -->
       <view class="addressTagsIndex-cell" slot="right-icon">
         <t-input
           t-class="input-com"
@@ -73,6 +79,7 @@
       t-class-left="cell-left"
       t-class-right="cell-right"
     >
+      <!-- 邮箱输入 -->
       <t-input
         slot="right-icon"
         t-class="input-com"
@@ -85,6 +92,7 @@
       />
     </t-cell>
     <view class="receipt-info">
+      <!-- 发票内容选择 -->
       <t-cell class="receipt-cell" title="发票内容" bordered="{{false}}" t-class-left="cell-left">
         <view class="btn-wrap" slot="right-icon">
           <view
@@ -102,6 +110,7 @@
       <view class="title">发票内容将显示详细商品名称与价格信息，发票金额为实际支付金额，不包含优惠等扣减金额</view>
     </view>
     <view class="receipt-know" bindtap="onDialogTap">
+      <!-- 发票须知 -->
       发票须知
       <t-icon name="help-circle" size="30rpx" />
     </view>
@@ -112,6 +121,7 @@
       visible="{{dialogShow}}"
       confirm-btn="我知道了"
     >
+      <!-- 发票须知弹窗 -->
       <view class="srcoll-view-wrap" slot="content">
         <scroll-view class="dialog-info" scroll-x="{{false}}" scroll-y="{{true}}">
           <view class="info-wrap">
@@ -128,8 +138,11 @@
   </block>
   <view wx:else></view>
   <view class="safe-area-bottom receipt-btn">
+    <!-- 确定按钮 -->
     <t-button t-class="receipt-btn-con" bindtap="onSure">确定</t-button>
   </view>
 </view>
 <t-toast id="t-toast" />
+<!-- 全局提示组件 -->
 <t-dialog id="t-dialog" />
+<!-- 全局对话框组件 -->

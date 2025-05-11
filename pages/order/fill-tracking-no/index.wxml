@@ -1,7 +1,13 @@
 <view class="fill-tracking-no">
-  <view class="notice-bar">请填写正确的退货包裹运单信息，以免影响退款进度</view>
+  <!-- 页面主容器 -->
+  <view class="notice-bar">
+    <!-- 提示信息 -->
+    请填写正确的退货包裹运单信息，以免影响退款进度
+  </view>
   <view class="fill-tracking-no__form">
+    <!-- 表单容器 -->
     <t-cell-group>
+      <!-- 运单号输入 -->
       <t-cell title="运单号" t-class-title="t-cell-title-width">
         <t-input
           slot="note"
@@ -14,9 +20,10 @@
           bind:change="onInput"
           data-key="trackingNo"
         />
-
+        <!-- 扫描图标 -->
         <t-icon slot="right-icon" name="scan" t-class="icon-scan" bindtap="onScanTap" />
       </t-cell>
+      <!-- 物流公司选择 -->
       <t-cell
         t-class-title="t-cell-title-width"
         t-class-note="{{deliveryCompany && deliveryCompany.name ? 't-cell__value' : 't-cell__placeholder'}}"
@@ -27,8 +34,10 @@
       />
     </t-cell-group>
     <view class="textarea-wrapper">
+      <!-- 备注信息标题 -->
       <text>备注信息</text>
     </view>
+    <!-- 备注信息输入框 -->
     <t-textarea
       t-class="t-textarea-wrapper"
       type="text"
@@ -41,11 +50,15 @@
     />
   </view>
   <view class="fill-tracking-no__button-bar">
+    <!-- 提交按钮 -->
     <t-button t-class="btn {{ submitActived ? 'confirmBtn' : 'disabled' }}" loading="{{submitting}}" bindtap="onSubmit">
       保存
     </t-button>
   </view>
 </view>
 <ui-reason-sheet id="wr-reason-sheet" />
+<!-- 原因选择组件 -->
 <t-toast id="t-toast" />
+<!-- 全局提示组件 -->
 <t-dialog id="t-dialog" />
+<!-- 全局对话框组件 -->

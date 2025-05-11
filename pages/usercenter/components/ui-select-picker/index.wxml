@@ -1,21 +1,40 @@
 <t-popup visible="{{show}}" placement="bottom">
+  <!-- 弹窗组件，显示在底部 -->
   <view class="city-picker-box" slot="content">
+    <!-- 选择器容器 -->
     <view wx:if="{{headerVisible}}" class="city-picker-header city-picker-more">
+      <!-- 如果显示头部 -->
       <view class="btn" hover-class="btn__active" catch:tap="onClose">取消</view>
+      <!-- 取消按钮 -->
       <view wx:if="{{title}}" class="title">{{title}}</view>
+      <!-- 标题 -->
       <view class="btn primary" hover-class="btn__active" catch:tap="onConfirm">确定</view>
+      <!-- 确定按钮 -->
     </view>
     <view wx:else class="city-picker-header">
+      <!-- 如果不显示头部 -->
       <view wx:if="{{title}}" class="title">{{title}}</view>
+      <!-- 标题 -->
     </view>
-    <picker-view class="picker" indicator-class="picker-center-row" value="{{pickerValue}}" bind:change="onChange">
+    <picker-view 
+      class="picker" 
+      indicator-class="picker-center-row" 
+      value="{{pickerValue}}" 
+      bind:change="onChange"
+    >
+      <!-- 选择器视图 -->
       <picker-view-column class="picker-column">
+        <!-- 选择器列 -->
         <view wx:for="{{ pickerOptions }}" wx:key="code">{{ item.name }}</view>
+        <!-- 遍历选项 -->
       </picker-view-column>
     </picker-view>
     <view class="city-picker-footer" wx:if="{{!headerVisible}}">
+      <!-- 如果不显示头部，显示底部操作按钮 -->
       <view class="btn" hover-class="btn__active" catch:tap="onClose">取消</view>
+      <!-- 取消按钮 -->
       <view class="btn primary" hover-class="btn__active" catch:tap="onConfirm">确定</view>
+      <!-- 确定按钮 -->
     </view>
   </view>
 </t-popup>

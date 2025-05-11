@@ -1,25 +1,44 @@
 <view class="order-sure" wx:if="{{!loading}}">
-  <address-card addressData="{{userAddress}}" bind:addclick="onGotoAddress" bind:addressclick="onGotoAddress" />
+  <!-- 确认订单页面主容器 -->
+  <address-card 
+    addressData="{{userAddress}}" 
+    bind:addclick="onGotoAddress" 
+    bind:addressclick="onGotoAddress" 
+  />
+  <!-- 地址卡片组件 -->
   <view class="order-wrapper">
-    <view wx:if="{{goodsList.length > 0}}" wx:for="{{goodsList}}" wx:for-item="goods" wx:for-index="gIndex" wx:key="id" class="goods-wrapper">
+    <!-- 商品列表 -->
+    <view 
+      wx:if="{{goodsList.length > 0}}" 
+      wx:for="{{goodsList}}" 
+      wx:for-item="goods" 
+      wx:for-index="gIndex" 
+      wx:key="id" 
+      class="goods-wrapper"
+    >
       <t-image src="{{goods.thumb}}" t-class="goods-image" mode="aspectFill" />
+      <!-- 商品缩略图 -->
       <view class="goods-content">
+        <!-- 商品标题和规格 -->
         <view class="goods-title">{{goods.title}}</view>
         <view>{{goods.specs}}</view>
       </view>
       <view class="goods-right">
+        <!-- 商品价格和数量 -->
         <price wr-class="goods-price" price="{{goods.price * 100}}" fill="{{true}}" decimalSmaller />
         <view class="goods-num">x{{goods.num}}</view>
       </view>
     </view>
   </view>
   <view class="pay-detail">
+    <!-- 支付详情 -->
     <view class="pay-item">
       <text>商品总额</text>
       <price fill decimalSmaller wr-class="pay-item__right font-bold" price="{{totalSalePrice * 100}}" />
     </view>
   </view>
   <view class="amount-wrapper">
+    <!-- 总计金额 -->
     <view class="pay-amount">
       <text class="order-num">共{{goodsList.length}}件</text>
       <text>小计</text>
@@ -27,13 +46,19 @@
     </view>
   </view>
   <view class="wx-pay-cover">
+    <!-- 提交订单按钮 -->
     <view class="wx-pay">
       <price decimalSmaller fill class="price" price="{{totalSalePrice * 100}}" />
-      <view class="submit-btn {{ userAddress != null ? '' : 'btn-gray'}}" bindtap="submitOrder">
+      <view 
+        class="submit-btn {{ userAddress != null ? '' : 'btn-gray'}}" 
+        bindtap="submitOrder"
+      >
         提交订单
       </view>
     </view>
   </view>
 </view>
 <t-toast id="t-toast" />
+<!-- 全局提示组件 -->
 <t-dialog id="t-dialog" />
+<!-- 全局对话框组件 -->

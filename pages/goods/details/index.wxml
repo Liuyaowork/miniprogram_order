@@ -1,17 +1,25 @@
 <view class="goods-detail-page">
+  <!-- 商品详情头部 -->
   <view class="goods-head">
+    <!-- 商品图片轮播 -->
     <t-swiper wx:if="{{details.images.length > 0}}" height="750rpx" current="{{current}}" autoplay="{{autoplay}}" duration="{{duration}}" interval="{{interval}}" navigation="{{navigation}}" list="{{details.images}}"></t-swiper>
+    
+    <!-- 商品信息 -->
     <view class="goods-info">
+      <!-- 商品价格 -->
       <view class="goods-number">
         <view class="goods-price">
           <price wr-class="class-goods-price" symbol-class="class-goods-symbol" price="{{minSalePrice}}" type="lighter" />
           <view class="goods-price-up">起</view>
         </view>
       </view>
+      <!-- 商品标题 -->
       <view class="goods-title">
         <view class="goods-name">{{details.title}}</view>
       </view>
     </view>
+
+    <!-- 规格选择 -->
     <view class="spu-select" bindtap="onSpecSelectTap">
       <view class="label">已选</view>
       <view class="content">
@@ -21,6 +29,8 @@
         <t-icon name="chevron-right" size="40rpx" color="#BBBBBB" />
       </view>
     </view>
+
+    <!-- 商品评价 -->
     <view wx:if="{{ commentsStatistics.commentCount > 0 }}" class="comments-wrap">
       <view class="comments-head" bindtap="navToCommentsListPage">
         <view class="comments-title-wrap">
@@ -32,6 +42,7 @@
           <t-icon name="chevron-right" size="40rpx" color="#BBBBBB" />
         </view>
       </view>
+      <!-- 单条评价 -->
       <view class="comment-item-wrap" wx:for="{{ commentsList }}" wx:for-item="commentItem" wx:key="goodsSpu">
         <view class="comment-item-head">
           <t-image t-class="comment-item-avatar" />
@@ -44,6 +55,8 @@
       </view>
     </view>
   </view>
+
+  <!-- 商品详情描述 -->
   <view class="desc-content">
     <view class="desc-content__title" wx:if="{{details.desc.length > 0}}">
       <t-image t-class="img" src="{{recLeftImg}}" />
@@ -55,9 +68,13 @@
     </view>
     <rich-text class="detail" nodes="{{detail}}" />
   </view>
+
+  <!-- 底部操作栏 -->
   <view class="goods-bottom-operation">
     <buy-bar jumpArray="{{jumpArray}}" soldout="{{soldout}}" isStock="{{isStock}}" shopCartNum="{{cartNum}}" buttonType="{{buttonType}}" bind:toAddCart="toAddCart" bind:toNav="toNav" bind:toBuyNow="buyItNow" class="goods-details-card" />
   </view>
+
+  <!-- 规格弹窗 -->
   <goods-specs-popup id="goodsSpecsPopup" initProps="{{descPopUpInitProps}}" show="{{isSpuSelectPopupShow}}" title="{{details.title || ''}}" src="{{specImg ? specImg : primaryImage}}" specList="{{details.specList || []}}" skuList="{{skuArray}}" limitBuyInfo="{{details.limitInfo[0].text || ''}}" bind:closeSpecsPopup="handlePopupHide" bind:change="chooseSpecItem" bind:changeNum="changeNum" bind:addCart="addCart" bind:buyNow="gotoBuy" bind:specsConfirm="specsConfirm" isStock="{{isStock}}" outOperateStatus="{{outOperateStatus}}" bind:picked="onPicked">
     <view slot="goods-price">
       <view class="popup-sku__price">
@@ -65,9 +82,15 @@
       </view>
     </view>
   </goods-specs-popup>
+
+  <!-- 促销弹窗 -->
   <promotion-popup list="{{list}}" bind:closePromotionPopup="closePromotionPopup" show="{{isShowPromotionPop}}" bind:promotionChange="promotionChange" />
 </view>
+
+<!-- 全局提示 -->
 <t-toast id="t-toast" />
+
+<!-- 加载中弹窗 -->
 <view wx:if="{{loading}}">
   <loading-dialog show="{{loading}}" />
 </view>

@@ -1,25 +1,38 @@
 <view class="comments-card-item wr-class">
+  <!-- 评论卡片主容器 -->
   <view class="comments-card-item-container">
+    <!-- 评论标题部分 -->
     <view class="comments-title">
       <view class="comments-card-item-userImg">
+        <!-- 用户头像 -->
         <t-image t-class="userImg" src="{{userHeadUrl}}" />
       </view>
       <view class="userName">{{userName}}</view>
+      <!-- 用户名 -->
       <text class="commentTime">{{commentTime}}</text>
+      <!-- 评论时间 -->
     </view>
     <view class="comments-info">
+      <!-- 评论信息 -->
       <view class="rate">
+        <!-- 评论评分 -->
         <t-rate value="{{commentScore}}" size="14" gap="2" color="{{['#ffc51c', '#ddd']}}" />
       </view>
-      <view class="goods-info-text" wx:if="{{goodsDetailInfo}}">{{goodsDetailInfo}}</view>
+      <view class="goods-info-text" wx:if="{{goodsDetailInfo}}">
+        <!-- 商品详情信息 -->
+        {{goodsDetailInfo}}
+      </view>
     </view>
     <view class="comments-card-item-container-content">
+      <!-- 评论内容 -->
       <view class="content-text" hidden="{{showContent}}"> {{commentContent}} </view>
     </view>
     <view class="comments-card-item-container-image" wx:if="{{commentResources.length > 0}}">
+      <!-- 评论图片或视频 -->
       <images-videos resources="{{commentResources}}" />
     </view>
     <view class="comments-card-reply" wx:if="{{sellerReply}}">
+      <!-- 店家回复 -->
       <text class="prefix">店家回复：</text>
       <text class="content">{{sellerReply}}</text>
     </view>

@@ -1,35 +1,50 @@
 <view class="coupon-page-container">
+  <!-- 优惠券活动商品页面主容器 -->
   <view class="notice-bar-content">
+    <!-- 通知栏 -->
     <view class="notice-bar-text">
       以下商品可使用
       <text class="height-light">{{couponTypeDesc}}</text>
+      <!-- 高亮显示优惠券类型描述 -->
       优惠券
     </view>
     <t-icon name="help-circle" size="32rpx" color="#AAAAAA" bind:tap="openStoreList" />
+    <!-- 帮助图标，点击打开规则详情 -->
   </view>
   <view class="goods-list-container">
+    <!-- 商品列表容器 -->
     <goods-list
       wr-class="goods-list-wrap"
       goodsList="{{goods}}"
       bind:click="goodClickHandle"
       bind:addcart="cartClickHandle"
     />
+    <!-- 商品列表组件，绑定点击和加入购物车事件 -->
   </view>
   <floating-button count="{{cartNum}}" />
+  <!-- 悬浮按钮，显示购物车商品数量 -->
   <t-popup visible="{{showStoreInfoList}}" placement="bottom" bind:visible-change="closeStoreList">
+    <!-- 弹窗组件，显示规则详情 -->
     <t-icon slot="closeBtn" name="close" size="40rpx" bind:tap="closeStoreList" />
+    <!-- 关闭按钮 -->
     <view class="popup-content-wrap">
+      <!-- 弹窗内容容器 -->
       <view class="popup-content-title"> 规则详情 </view>
+      <!-- 弹窗标题 -->
       <view class="desc-group-wrap">
+        <!-- 描述内容分组 -->
         <view wx:if="{{detail && detail.timeLimit}}" class="item-wrap">
+          <!-- 优惠券有效时间 -->
           <view class="item-title">优惠券有效时间</view>
           <view class="item-label">{{detail.timeLimit}}</view>
         </view>
         <view wx:if="{{detail && detail.desc}}" class="item-wrap">
+          <!-- 优惠券说明 -->
           <view class="item-title">优惠券说明</view>
           <view class="item-label">{{detail.desc}}</view>
         </view>
         <view wx:if="{{detail && detail.useNotes}}" class="item-wrap">
+          <!-- 使用须知 -->
           <view class="item-title">使用须知</view>
           <view class="item-label">{{detail.useNotes}}</view>
         </view>
@@ -38,3 +53,4 @@
   </t-popup>
 </view>
 <t-toast id="t-toast" />
+<!-- 全局提示组件 -->

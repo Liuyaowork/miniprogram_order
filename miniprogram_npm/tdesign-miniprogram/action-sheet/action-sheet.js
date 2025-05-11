@@ -35,68 +35,59 @@ let ActionSheet = class ActionSheet extends SuperComponent {
         this.methods = {
             onSwiperChange(e) {
                 const { detail: { current }, } = e;
-                // 更新当前滑块索引
                 this.setData({
                     currentSwiperIndex: current,
                 });
             },
             splitGridThemeActions() {
-                // 如果主题不是网格模式，则直接返回
                 if (this.data.theme !== ActionSheetTheme.Grid)
                     return;
-                // 将 items 按照 count 分组，用于网格模式显示
                 this.setData({
                     gridThemeItems: chunk(this.data.items, this.data.count),
                 });
             },
             show(options) {
-                // 显示 ActionSheet，并合并传入的选项
                 this.setData(Object.assign(Object.assign(Object.assign({}, this.initialData), options), { visible: true }));
-                this.splitGridThemeActions(); // 分割网格模式的操作项
-                this.autoClose = true; // 自动关闭标志
-                this._trigger('visible-change', { visible: true }); // 触发 visible-change 事件
+                this.splitGridThemeActions();
+                this.autoClose = true;
+                this._trigger('visible-change', { visible: true });
             },
             memoInitialData() {
-                // 记录初始数据，用于重置
                 this.initialData = Object.assign(Object.assign({}, this.properties), this.data);
             },
             close() {
-                // 关闭 ActionSheet
-                this.triggerEvent('close', { trigger: 'command' }); // 触发 close 事件
-                this._trigger('visible-change', { visible: false }); // 触发 visible-change 事件
+                this.triggerEvent('close', { trigger: 'command' });
+                this._trigger('visible-change', { visible: false });
             },
             onPopupVisibleChange({ detail }) {
-                // 监听弹窗可见性变化
                 if (!detail.visible) {
-                    this.triggerEvent('close', { trigger: 'overlay' }); // 触发 close 事件
-                    this._trigger('visible-change', { visible: false }); // 触发 visible-change 事件
+                    this.triggerEvent('close', { trigger: 'overlay' });
+                    this._trigger('visible-change', { visible: false });
                 }
                 if (this.autoClose) {
-                    this.setData({ visible: false }); // 设置为不可见
-                    this.autoClose = false; // 重置自动关闭标志
+                    this.setData({ visible: false });
+                    this.autoClose = false;
                 }
             },
             onSelect(event) {
-                // 处理选项选择事件
                 const { currentSwiperIndex, items, gridThemeItems, count, theme } = this.data;
                 const { index } = event.currentTarget.dataset;
-                const isSwiperMode = theme === ActionSheetTheme.Grid; // 判断是否为网格模式
+                const isSwiperMode = theme === ActionSheetTheme.Grid;
                 const item = isSwiperMode ? gridThemeItems[currentSwiperIndex][index] : items[index];
-                const realIndex = isSwiperMode ? index + currentSwiperIndex * count : index; // 计算真实索引
+                const realIndex = isSwiperMode ? index + currentSwiperIndex * count : index;
                 if (item) {
-                    this.triggerEvent('selected', { selected: item, index: realIndex }); // 触发 selected 事件
+                    this.triggerEvent('selected', { selected: item, index: realIndex });
                     if (!item.disabled) {
-                        this.triggerEvent('close', { trigger: 'select' }); // 触发 close 事件
-                        this._trigger('visible-change', { visible: false }); // 触发 visible-change 事件
+                        this.triggerEvent('close', { trigger: 'select' });
+                        this._trigger('visible-change', { visible: false });
                     }
                 }
             },
             onCancel() {
-                // 处理取消事件
-                this.triggerEvent('cancel'); // 触发 cancel 事件
+                this.triggerEvent('cancel');
                 if (this.autoClose) {
-                    this.setData({ visible: false }); // 设置为不可见
-                    this.autoClose = false; // 重置自动关闭标志
+                    this.setData({ visible: false });
+                    this.autoClose = false;
                 }
             },
         };

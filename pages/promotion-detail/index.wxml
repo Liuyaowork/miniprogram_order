@@ -1,5 +1,7 @@
 <view id="js-page-wrap" class="promotion-detail-container">
+	<!-- 促销详情页面主容器 -->
 	<view wx:if="{{banner}}" class="wrap" id="{{independentID}}">
+		<!-- 如果有促销横幅，显示横幅内容 -->
 		<view class="banner-wrap">
 			<t-image
 			  src="{{banner}}"
@@ -7,7 +9,9 @@
 			  webp="{{true}}"
 			  t-class="t-class-promotion-head"
 			/>
+			<!-- 横幅图片 -->
 			<view wx:if="{{!showBannerDesc && (time >= 0 || statusTag === 'finish')}}" class="count-down-wrap in-banner-count-down-wrap">
+				<!-- 横幅倒计时 -->
 				<block wx:if="{{statusTag === 'finish'}}">
 					<view class="status-tag {{statusTag}}">已结束</view>
 					<text class="count-down-label">活动已结束</text>
@@ -26,16 +30,20 @@
 					/>
 				</block>
 				<view class="detail-entry" bind:tap="bannerClickHandle">
+					<!-- 规则详情入口 -->
 					<text class="detail-entry-label">规则详情</text>
 					<t-icon name="chevron-right" size="34rpx" style="color: #999" />
 				</view>
 			</view>
 			<view wx:if="{{showBannerDesc && (useBannerDescSlot || time >= 0 || statusTag === 'finish')}}" class="banner-desc-wrap">
+				<!-- 横幅描述 -->
 				<block wx:if="{{useBannerDescSlot}}">
 					<slot name="banner-desc" />
+					<!-- 自定义横幅描述插槽 -->
 				</block>
 				<block wx:else>
 					<view class="count-down-wrap after-banner-count-down-wrap">
+						<!-- 倒计时和规则详情 -->
 						<block wx:if="{{statusTag === 'finish'}}">
 							<view class="status-tag {{statusTag}}">已结束</view>
 							<text class="count-down-label">活动已结束</text>
@@ -64,6 +72,7 @@
 		</view>
 	</view>
 	<view wx:if="{{list && list.length>0}}" class="promotion-goods-list">
+		<!-- 如果有促销商品列表，显示商品列表 -->
 		<goods-list
 		  wr-class="goods-list-container"
 		  goodsList="{{list}}"
@@ -72,5 +81,6 @@
 		/>
 	</view>
 	<t-toast id="t-toast" />
+	<!-- 全局提示组件 -->
 </view>
 

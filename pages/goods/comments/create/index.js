@@ -6,10 +6,11 @@ import { createComment } from '../../../../services/comments/comments';
 
 Page({
   data: {
-    sku: null,
+    sku: null, // 商品信息
   },
 
   toast(message) {
+    // 显示提示信息
     Toast({
       context: this,
       selector: '#t-toast',
@@ -18,6 +19,7 @@ Page({
   },
 
   failedAndBack(message, e) {
+    // 处理失败逻辑并返回上一页
     e && console.error(e);
     this.toast(message);
     setTimeout(() => {
@@ -26,6 +28,7 @@ Page({
   },
 
   async onLoad(options) {
+    // 页面加载时获取订单项和商品信息
     const orderItemId = options.orderItemId;
     if (typeof orderItemId !== 'string') return this.failedAndBack('获取订单失败');
 
@@ -38,6 +41,7 @@ Page({
     if (sku == null) return this.failedAndBack('获取商品信息失败');
 
     try {
+      // 获取商品详情并处理图片和规格信息
       sku = await getSkuDetail(sku._id);
       sku.image = (await getCloudImageTempUrl([sku.image ?? '']))[0];
       sku.spec = sku.attr_value.map((x) => x.value).join('，');
@@ -48,6 +52,7 @@ Page({
   },
 
   onRateChange(e) {
+    // 评分变化时更新数据
     const { value } = e?.detail;
     const item = e?.currentTarget?.dataset?.item;
     this.setData({ [item]: value }, () => {
@@ -56,19 +61,21 @@ Page({
   },
 
   onAnonymousChange(e) {
+    // 切换匿名状态
     const status = !!e?.detail?.checked;
     this.setData({ isAnonymous: status });
   },
 
   handleSuccess(e) {
+    // 上传成功时更新文件列表
     const { files } = e.detail;
-
     this.setData({
       uploadFiles: files,
     });
   },
 
   handleRemove(e) {
+    // 删除上传文件
     const { index } = e.detail;
     const { uploadFiles } = this.data;
     uploadFiles.splice(index, 1);
@@ -78,12 +85,14 @@ Page({
   },
 
   onTextAreaChange(e) {
+    // 文本框内容变化时更新状态
     const value = e?.detail?.value;
     this.textAreaValue = value;
     this.updateButtonStatus();
   },
 
   updateButtonStatus() {
+    // 更新提交按钮的状态
     const { goodRateValue, isAllowedSubmit } = this.data;
     const { textAreaValue } = this;
     const temp = Boolean(goodRateValue) && Boolean(textAreaValue);
@@ -91,6 +100,7 @@ Page({
   },
 
   async onSubmitBtnClick() {
+    // 提交评论
     const { goodRateValue, isAllowedSubmit, orderItemId, sku } = this.data;
     const { textAreaValue } = this;
 
